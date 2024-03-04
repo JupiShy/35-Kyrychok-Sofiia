@@ -111,7 +111,7 @@ public class Calculating {
         System.out.println(str);
 ```
 
-![](/images/Screenshot1.png)
+![](images/Screenshot2.PNG)
 
 #### Завдання 2.2
 
@@ -195,4 +195,4 @@ public class SavingAndRestoring implements Serializable {
         object.SerAndDeser(); 
 ```
 
-![](/images/Screenshot2.png)
+![](images/Screenshot1.PNG)
