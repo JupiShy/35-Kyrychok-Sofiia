@@ -12,7 +12,6 @@ public class Calculating {
     public Calculating(Parameters parameters){
         this.parameters = parameters;
     }
-    
     /**
      * Обчислює добуток параметрів та призначає це значення змінній result класу Parameters
      */
