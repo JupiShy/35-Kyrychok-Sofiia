@@ -6,11 +6,7 @@ package Task2_1;
  * @author Софія Киричок
  */
 public class Calculating {
-     /**
-     * Завдання 1.2
-     * 
-     * Клас для знаходження рішення задачі з агрегуванням
-     */
+    
     private final Parameters parameters;
     
     public Calculating(Parameters parameters){
