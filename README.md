@@ -217,7 +217,7 @@ public class Main {
                     calc.show();
                     break;
                 case 'g':
-                    System.out.println("Generating new float number...");
+                    System.out.println("Generating new int number...");
                     Random random = new Random();
                     calc.init(random.nextInt(2501));
                     calc.show();
