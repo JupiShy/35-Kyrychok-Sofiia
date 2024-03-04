@@ -6,14 +6,20 @@ import java.io.InputStreamReader;
 import java.util.Random;
 
 /**
- *
+ * Виконує визначення та відображення результатів
+ * 
  * @author Киричок Софія
+ * @see Main#main
  */
 public class Main {
-
+    
+    /**Об'єкт класу {@linkplain Calc} для обчислень*/
     private Calc calc = new Calc();
+    
+    /**Об'єкт класу {@linkplain Irem2d} для ініціалізації обчислюваних значень*/
     private Item2d item = new Item2d();
-
+    
+    /**Відображує меню*/
     private void menu() {
         String s = null;
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -39,7 +45,7 @@ public class Main {
                 case 'g':
                     System.out.println("Generating new float number...");
                     Random random = new Random();
-                    calc.init(random.nextFloat() * 99 + 1);
+                    calc.init(random.nextInt(2501));
                     calc.show();
                     break;
                 case 's':
@@ -67,6 +73,7 @@ public class Main {
     }
 
     /**
+     * Виконується при запуску програми
      * @param args the command line arguments
      */
     public static void main(String[] args) {

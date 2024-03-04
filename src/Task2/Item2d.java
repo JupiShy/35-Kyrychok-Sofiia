@@ -10,38 +10,58 @@ import java.io.Serializable;
 public class Item2d implements Serializable{
     
     private static final long serialVersionUID = 1L;
-    transient private float num;
+    
+    /**Аргумент обчислюваної функції */
+    transient private int num;
+    
+    /**Результат обчислюваної функції */
     private int result;
     
+    /**Ініціалізація {@linkplain Item2d#num}, стандартним значенням */
     public Item2d(){
-        num = .0f;
+        num = 0;
     }
     
-    public Item2d(float num){ 
+    /**Встановлює значення аргументу функції
+     * @param num значення для ініціалізації поля
+     */
+    public Item2d(int num){ 
         this.num = num;
     }
 
-    public float getNum() {
+    /**Отримує значення {@linkplain Item2d#num}
+     * @return num значення аргументу функції
+     */
+    public int getNum() {
         return num;
     }
-
-    public void setNum(float num) {
+    
+    /**Встановлює значення {@linkplain Item2d#num}
+     * @param num значення для ініціалізації поля
+     */
+    public void setNum(int num) {
         this.num = num;
     }
-
+    
+     /**Отримує значення {@linkplain Item2d#result}
+     * @return result значення результату функції
+     */
     public int getResult() {
         return result;
     }
-
+    
+     /**Встановлює значення {@linkplain Item2d#result}
+     * @param result значення для ініціалізації поля
+     */
     public void setResult(int result) {
         this.result = result;
     }
     
     /**
-     * @return Повертає строку з значеннями параметрів та результатом.
+     * @return Повертає строку з значенням аргументу та результатом.
     **/
     @Override
     public String toString(){
-        return "Number: " + num + "\nAmount of tetrads: " + result;
+        return "Number: " + num + "\nAmount of full tetrads: " + result;
     }
 }
