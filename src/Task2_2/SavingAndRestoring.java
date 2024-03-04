@@ -41,14 +41,12 @@ public class SavingAndRestoring implements Serializable {
             ObjectOutputStream out = new ObjectOutputStream(byteArrayOutputStream);
             out.writeObject(this);
             out.close();
-
             System.out.println("Serialized:\n" + byteArrayOutputStream.toString());
 
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
             ObjectInputStream in = new ObjectInputStream(byteArrayInputStream);
             SavingAndRestoring newObject = (SavingAndRestoring) in.readObject();
             in.close();
-
             System.out.println("Deserialized:\n" + newObject.toString());
 
             byteArrayOutputStream.close();
