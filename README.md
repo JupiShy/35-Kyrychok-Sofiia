@@ -10,9 +10,10 @@
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
         System.out.println("Your input: " + input);
+        scanner.close();
 ```
 
-## Завдання 2
+## Завдання 2 (04.03.24)
 
 #### Завдання 2.1
 
@@ -196,3 +197,51 @@ public class SavingAndRestoring implements Serializable {
 ```
 
 ![](images/Screenshot2.PNG)
+
+#### Завдання 2.4 (Варіант 11)
+
+- Підрахувати кількість повних тетрад у двійковому поданні заданого десяткового числа.
+- Тетрада (інформатика) — група з чотирьох послідовних бітів у двійковому запису числа: половина октету, один розряд двійково-десяткового коду
+
+```java
+package Task2_4;
+
+/**
+ * Підрахування кількості повних тетрад у двійковому поданні заданого десяткового числа.
+ * 
+ * @author Киричок Софія
+ */
+public class Tetrads {
+    private float number;
+    
+    public Tetrads(float number){
+        this.number = number;
+    }
+
+    public float getNumber() {
+        return number;
+    }
+
+    public void setNumber(float number) {
+        this.number = number;
+    }
+    
+    public void countTetrads(){
+        int intNumBits = Float.floatToIntBits(number);
+        String binaryString = Integer.toBinaryString(intNumBits);
+        int tetradaCount = binaryString.length() / 4;
+        System.out.println("Binary code " + number + ": " + binaryString + ". Amount of full tetrads: " + tetradaCount);
+    }
+}
+```
+
+Робота коду:
+
+```java
+        System.out.println("- Task 2.4 -");
+
+        Tetrads tetr = new Tetrads(25.7f);
+        tetr.countTetrads();
+```
+
+![](images/Screenshot3.PNG)
