@@ -1,4 +1,4 @@
-package Task2_1;
+package Task2;
 
 import java.io.Serializable;
 
@@ -7,32 +7,26 @@ import java.io.Serializable;
  * 
  * @author Киричок Софія
  */
-public class Parameters implements Serializable{
-
+public class Item2d implements Serializable{
+    
     private static final long serialVersionUID = 1L;
-    private int param1;
-    private int param2;
+    transient private float num;
     private int result;
     
-    public Parameters(int param1, int param2){
-        this.param1 = param1;
-        this.param2 = param2;
+    public Item2d(){
+        num = .0f;
+    }
+    
+    public Item2d(float num){ 
+        this.num = num;
     }
 
-    public int getParam1() {
-        return param1;
+    public float getNum() {
+        return num;
     }
 
-    public void setParam1(int param1) {
-        this.param1 = param1;
-    }
-
-    public int getParam2() {
-        return param2;
-    }
-
-    public void setParam2(int param2) {
-        this.param2 = param2;
+    public void setNum(float num) {
+        this.num = num;
     }
 
     public int getResult() {
@@ -48,6 +42,6 @@ public class Parameters implements Serializable{
     **/
     @Override
     public String toString(){
-        return "Parameter 1: " + param1 + "\nParameter 2: " + param2 + "\nResult: " + result;
+        return "Number: " + num + "\nAmount of tetrads: " + result;
     }
 }

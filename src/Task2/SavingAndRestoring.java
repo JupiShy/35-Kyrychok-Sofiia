@@ -1,4 +1,4 @@
-package Task2_2;
+package Task2;
 
 import java.io.*;
 
