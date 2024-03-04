@@ -31,39 +31,59 @@ import java.io.Serializable;
 public class Item2d implements Serializable{
     
     private static final long serialVersionUID = 1L;
-    transient private float num;
+    
+    /**Аргумент обчислюваної функції */
+    transient private int num;
+    
+    /**Результат обчислюваної функції */
     private int result;
     
+    /**Ініціалізація {@linkplain Item2d#num}, стандартним значенням */
     public Item2d(){
-        num = .0f;
+        num = 0;
     }
     
-    public Item2d(float num){ 
+    /**Встановлює значення аргументу функції
+     * @param num значення для ініціалізації поля
+     */
+    public Item2d(int num){ 
         this.num = num;
     }
 
-    public float getNum() {
+    /**Отримує значення {@linkplain Item2d#num}
+     * @return num значення аргументу функції
+     */
+    public int getNum() {
         return num;
     }
-
-    public void setNum(float num) {
+    
+    /**Встановлює значення {@linkplain Item2d#num}
+     * @param num значення для ініціалізації поля
+     */
+    public void setNum(int num) {
         this.num = num;
     }
-
+    
+     /**Отримує значення {@linkplain Item2d#result}
+     * @return result значення результату функції
+     */
     public int getResult() {
         return result;
     }
-
+    
+     /**Встановлює значення {@linkplain Item2d#result}
+     * @param result значення для ініціалізації поля
+     */
     public void setResult(int result) {
         this.result = result;
     }
     
     /**
-     * @return Повертає строку з значеннями параметрів та результатом.
+     * @return Повертає строку з значенням аргументу та результатом.
     **/
     @Override
     public String toString(){
-        return "Number: " + num + "\nAmount of tetrads: " + result;
+        return "Number: " + num + "\nAmount of full tetrads: " + result;
     }
 }
 ```
@@ -160,14 +180,20 @@ import java.io.InputStreamReader;
 import java.util.Random;
 
 /**
- *
+ * Виконує визначення та відображення результатів
+ * 
  * @author Киричок Софія
+ * @see Main#main
  */
 public class Main {
-
+    
+    /**Об'єкт класу {@linkplain Calc} для обчислень*/
     private Calc calc = new Calc();
+    
+    /**Об'єкт класу {@linkplain Irem2d} для ініціалізації обчислюваних значень*/
     private Item2d item = new Item2d();
-
+    
+    /**Відображує меню*/
     private void menu() {
         String s = null;
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -193,7 +219,7 @@ public class Main {
                 case 'g':
                     System.out.println("Generating new float number...");
                     Random random = new Random();
-                    calc.init(random.nextFloat() * 99 + 1);
+                    calc.init(random.nextInt(2501));
                     calc.show();
                     break;
                 case 's':
@@ -221,6 +247,7 @@ public class Main {
     }
 
     /**
+     * Виконується при запуску програми
      * @param args the command line arguments
      */
     public static void main(String[] args) {
@@ -231,4 +258,72 @@ public class Main {
 }
 ```
 
+- Юніт тест (у мене не працює, бо не підключаються необхідні біблиотеки)
+
+```java
+package Task2;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.Random;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+/**
+ *
+ * @author Киричок Софія
+ */
+public class MainTest implements Serializable {
+
+    /**
+     * Перевірка функціональності класу {@linkplain Calc}
+     */
+    @Test
+    public void testCalc() {
+        Calc calc = new Calc();
+        assertEquals(1, calc.countTetrads(0));
+        assertEquals(2, calc.countTetrads(1000));
+        assertEquals(3, calc.countTetrads(3578));
+    }
+
+    /**
+     * Перевірка серіалізації (коректність відновлення даних) 
+     */
+    @Test
+    public void testRestore() {
+        Calc calc = new Calc();
+        Random random = new Random();
+        int num, result;
+        for (int ctr = 0; ctr < 1000; ctr++) {
+            num = random.nextInt(2501);
+
+            // Ініціалізуємо об'єкт calc з випадковим числом num
+            calc.init(num);
+
+            // Отримуємо результат ініціалізації
+            result = calc.getObject().getResult();
+
+            try {
+                // Зберігаємо стан
+                calc.save();
+            } catch (IOException e) {
+                fail("Failed to save state");
+            }
+
+            // Імітуємо зміну стану
+            calc.init(random.nextInt(2501));
+
+            try {
+                // Відновлюємо стан
+                calc.restore();
+            } catch (Exception e) {
+                fail("Failed to restore state");
+            }
+
+            // Перевірка, чи відновлені дані вірно
+            assertEquals(result, calc.getObject().getResult());
+        }
+    }
+}
+```
 ![](images/Screenshot.PNG)
