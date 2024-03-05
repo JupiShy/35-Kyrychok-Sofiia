@@ -745,10 +745,10 @@ public class MainTest implements Serializable {
 
 Результати тестування:
 
-![](Screenshot2.PNG)
+![](images/Screenshot2.PNG)
 
 Робота програми:
 
-![](Screenshot3.PNG)
+![](images/Screenshot3.PNG)
 
-![](Screenshot4.PNG)
+![](images/Screenshot4.PNG)
