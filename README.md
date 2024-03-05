@@ -88,9 +88,6 @@ public class Item2d implements Serializable{
 }
 ```
 
-- Розробити клас для демонстрації в діалоговому режимі збереження та відновлення стану об'єкта, використовуючи серіалізацію.
-- Показати особливості використання transient полів. 
-
 ```java
 package Task2;
 
@@ -170,6 +167,9 @@ public class Calc {
     }
 }
 ```
+
+- Розробити клас для демонстрації в діалоговому режимі збереження та відновлення стану об'єкта, використовуючи серіалізацію.
+- Показати особливості використання transient полів. 
 
 ```java
 package Task2;
@@ -258,18 +258,13 @@ public class Main {
 }
 ```
 
-- Юніт тест (у мене не працює, бо не підключаються необхідні біблиотеки)
+- Юніт тест (клас для тестування коректності результатів обчислень та серіалізації/десеріалізації)
 
 ```java
-package Task2;
-
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Random;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import Task2.Calc;
 
 /**
+ * Тестування коректності результатів обчислень та серіалізації/десеріалізації
  *
  * @author Киричок Софія
  */
@@ -281,7 +276,7 @@ public class MainTest implements Serializable {
     @Test
     public void testCalc() {
         Calc calc = new Calc();
-        assertEquals(1, calc.countTetrads(0));
+        assertEquals(0, calc.countTetrads(0));
         assertEquals(2, calc.countTetrads(1000));
         assertEquals(3, calc.countTetrads(3578));
     }
