@@ -1,4 +1,4 @@
-package Task2;
+package Task2Classes;
 
 import java.io.Serializable;
 
@@ -12,7 +12,7 @@ public class Item2d implements Serializable{
     private static final long serialVersionUID = 1L;
     
     /**Аргумент обчислюваної функції */
-    transient private int num;
+    private int num;
     
     /**Результат обчислюваної функції */
     private int result;

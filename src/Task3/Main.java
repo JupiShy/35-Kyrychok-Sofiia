@@ -1,25 +1,31 @@
-package Task2;
+package Task3;
 
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Random;
 
 /**
  * Виконує визначення та відображення результатів
- * 
+ *
  * @author Киричок Софія
  * @see Main#main
  */
 public class Main {
-    
-    /**Об'єкт класу {@linkplain Calc} для обчислень*/
-    private Calc calc = new Calc();
-    
-    /**Об'єкт класу {@linkplain Irem2d} для ініціалізації обчислюваних значень*/
-    private Item2d item = new Item2d();
-    
-    /**Відображує меню*/
+
+    /**
+     * Об'єкт реалізуючий інтерфейс {@linkplain View};
+     * обслуговує колекцію об'єктів {@linkplain ex01.Item2d}
+     */
+    private View view;
+
+    /** Ініціалізує поле {@linkplain Main#view view}*/
+    public Main(View view) {
+        this.view = view;
+    }
+
+    /**
+     * Відображує меню
+     */
     private void menu() {
         String s = null;
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
@@ -40,45 +46,45 @@ public class Main {
                     break;
                 case 'v':
                     System.out.println("View current.");
-                    calc.show();
+                    view.viewShow();
                     break;
                 case 'g':
-                    System.out.println("Generating new int number...");
-                    Random random = new Random();
-                    calc.init(random.nextInt(2501));
-                    calc.show();
+                    System.out.println("Random generation.");
+                    view.viewInit();
+                    view.viewShow();
                     break;
                 case 's':
                     System.out.println("Save current.");
                     try {
-                        calc.save();
+                        view.viewSave();
                     } catch (IOException e) {
                         System.out.println("Serialization error: " + e);
                     }
-                    calc.show();
+                    view.viewShow();
                     break;
                 case 'r':
                     System.out.println("Restore last saved.");
                     try {
-                        calc.restore();
+                        view.viewRestore();
                     } catch (Exception e) {
                         System.out.println("Serialization error: " + e);
                     }
-                    calc.show();
+                    view.viewShow();
                     break;
                 default:
-                    System.out.print("Wrong command. ");
+                    System.out.println("Wrong command.");
             }
         } while (s.charAt(0) != 'q');
     }
 
     /**
      * Виконується при запуску програми
+     *
      * @param args the command line arguments
      */
     public static void main(String[] args) {
 
-        Main main = new Main();
+        Main main = new Main(new ViewableResult().getView());
         main.menu();
     }
 }

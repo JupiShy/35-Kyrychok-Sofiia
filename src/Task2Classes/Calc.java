@@ -1,4 +1,4 @@
-package Task2;
+package Task2Classes;
 
 import java.io.IOException;
 import java.io.FileInputStream;
@@ -29,7 +29,7 @@ public class Calc {
      */
     public int countTetrads(int num) {
         String binaryString = Integer.toBinaryString(num);
-        System.out.println(binaryString);
+        System.out.print(binaryString);
         return binaryString.length() / 4;
     }
     

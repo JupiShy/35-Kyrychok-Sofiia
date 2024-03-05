@@ -1,10 +1,10 @@
 import java.io.Serializable;
 import org.junit.Test;
-import static org.junit.Assert.fail;
 import static org.junit.Assert.assertEquals;
+import junit.framework.Assert;
 import java.io.IOException;
 import java.util.Random;
-import Task2.Calc;
+import Task3.ViewResult;
 
 /**
  * Тестування коректності результатів обчислень та серіалізації/десеріалізації
@@ -13,53 +13,49 @@ import Task2.Calc;
  */
 public class MainTest implements Serializable {
 
-    /**
-     * Перевірка функціональності класу {@linkplain Calc}
-     */
+    ViewResult view = new ViewResult(5);
+
     @Test
-    public void testCalc() {
-        Calc calc = new Calc();
-        assertEquals(0, calc.countTetrads(0));
-        assertEquals(2, calc.countTetrads(1000));
-        assertEquals(3, calc.countTetrads(3578));
+    public void testBinaryCode() {
+        assertEquals("0", view.binaryCode(0));
+        assertEquals("1", view.binaryCode(1));
+        assertEquals("101", view.binaryCode(5));
+        assertEquals("111111111", view.binaryCode(511));
+        assertEquals("100000000000", view.binaryCode(2048));
+    }
+    
+    /**Перевірка правильності обрахування повних тетрад*/
+    @Test
+    public void testCountTetrads() {
+        assertEquals(1, view.countTetrads("1000"));
+        assertEquals(1, view.countTetrads("1010101"));
+        assertEquals(2, view.countTetrads("10001000"));
+        assertEquals(3, view.countTetrads("100010001000"));
     }
 
     /**
-     * Перевірка серіалізації (коректність відновлення даних) 
+     * Перевірка серіалізації (коректність відновлення даних)
      */
     @Test
     public void testRestore() {
-        Calc calc = new Calc();
         Random random = new Random();
-        int num, result;
-        for (int ctr = 0; ctr < 1000; ctr++) {
-            num = random.nextInt(2501);
+        ViewResult view1 = new ViewResult(1000);
+        ViewResult view2 = new ViewResult();
 
-            // Ініціалізуємо об'єкт calc з випадковим числом num
-            calc.init(num);
+        view1.init(random.nextInt(10000));
 
-            // Отримуємо результат ініціалізації
-            result = calc.getObject().getResult();
-
-            try {
-                // Зберігаємо стан
-                calc.save();
-            } catch (IOException e) {
-                fail("Failed to save state");
-            }
-
-            // Імітуємо зміну стану
-            calc.init(random.nextInt(2501));
-
-            try {
-                // Відновлюємо стан
-                calc.restore();
-            } catch (Exception e) {
-                fail("Failed to restore state");
-            }
-
-            // Перевірка, чи відновлені дані вірно
-            assertEquals(result, calc.getObject().getResult());
+        try {
+            view1.viewSave();
+        } catch (IOException e) {
+            Assert.fail(e.getMessage());
         }
+
+        try {
+            view2.viewRestore();
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+
+        assertEquals(view1.getItems().size(), view2.getItems().size());
     }
 }
