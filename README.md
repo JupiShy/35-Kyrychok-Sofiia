@@ -1110,7 +1110,7 @@ public class MainTest implements Serializable {
 
 Результати тестування:
 
-<img align="center" width="40%" height="40%" src="images/Screenshot5.PNG">
+<img align="center" width="70%" height="70%" src="images/Screenshot5.PNG">
 
 Робота програми:
 
