@@ -4,9 +4,10 @@ import java.util.Formatter;
 import Task2.Item2d;
 import Task3.ViewResult;
 
-/**
+/**ConcreteProduct. Pattern Factory Method<br>
+ * Виведення у вигляді таблиці 
  *
- * @author megas
+ * @author Киричок Софія
  */
 public class ViewTable extends ViewResult {
 
@@ -20,18 +21,32 @@ public class ViewTable extends ViewResult {
      */
     private short width;
 
+    /**
+     * Встановлює {@linkplain ViewTable#width width} значенням
+     * {@linkplain ViewTable#DEFAULT_WIDTH DEFAULT_WIDTH}<br>
+     * Викликається конструктор суперкласу
+     * {@linkplain ViewResult#ViewResult() ViewResult()}
+     */
     public ViewTable() {
         width = DEFAULT_WIDTH;
     }
 
+    /**
+     * Встановлює {@linkplain ViewTable#width} значенням width Викликається
+     * конструктор суперкласу {@linkplain ViewResult#ViewResult() ViewResult()}
+     *
+     * @param width ширина таблиці
+     */
     public ViewTable(short width) {
         this.width = width;
     }
 
     /**
+     * Встановлює {@linkplain ViewTable#width} значенням width Викликається
+     * конструктор суперкласу {@linkplain ViewResult#ViewResult() ViewResult()}
      *
-     * @param width
-     * @param n
+     * @param width ширина таблиці
+     * @param n кількість елементів колекції; передається суперконструктору
      */
     public ViewTable(short width, int n) {
         super(n);
@@ -39,24 +54,27 @@ public class ViewTable extends ViewResult {
     }
 
     /**
+     * Встановлює {@linkplain ViewTable#width} значенням width
      *
-     * @param width
-     * @return
+     * @param width нова ширина таблиці
+     * @return задана ширина таблиці
      */
     public int setWidth(short width) {
         return this.width = width;
     }
 
     /**
+     * Повертає значення ширини таблиці
      *
-     * @return
+     * @return ширина таблиці
      */
     public int getWidth() {
         return width;
     }
 
     /**
-     *
+     * Виводить горизонтальний розділювач для таблиці шириною
+     * {@linkplain ViewTable#width} символів
      */
     private void outLine() {
         for (int i = width; i > 0; i--) {
@@ -65,6 +83,7 @@ public class ViewTable extends ViewResult {
     }
 
     /**
+     * Закінчує вивід розділювачем {@linkplain ViewTable#outLine()}
      *
      */
     private void outLineLn() {
@@ -72,6 +91,9 @@ public class ViewTable extends ViewResult {
         System.out.println();
     }
 
+    /**
+     * Виводить заголовок таблиці
+     */
     private void outHeader() {
         Formatter fmt = new Formatter();
         int partWidth = (width - 3) / 2;
@@ -81,10 +103,10 @@ public class ViewTable extends ViewResult {
     }
 
     /**
-     * Виводіть "тіло" таблиці шириною {@linkplain ViewTable#width} символів
+     * Виводіть "тіло" таблиці символів
      */
-    private void outBody() { 
-        
+    private void outBody() {
+
         int partWidth = (width - 3) / 2;
         for (Item2d item : getItems()) {
             Formatter fmt = new Formatter();
@@ -93,6 +115,13 @@ public class ViewTable extends ViewResult {
         }
     }
 
+    /**
+     * Перевантаження (overloading) методу суперкласу; визначає поле
+     * {@linkplain ViewTable#width} значением width. Викликає метод
+     * {@linkplain ViewResult#viewInit() viewInit()}
+     *
+     * @param width нова ширина таблиці
+     */
     public final void init(short width) { // method overloading
         this.width = width;
         viewInit();
@@ -100,9 +129,13 @@ public class ViewTable extends ViewResult {
     }
 
     /**
+     * Перевантаження (overloading) методу суперкласу; визначає поле
+     * {@linkplain ViewTable#width} значением width. Для об'єкту
+     * {@linkplain ViewTable} викликає метод
+     * {@linkplain ViewTable#init(int stepNum)}
      *
-     * @param width новая ширина таблицы.
-     * @param stepNum передается методу <b>init(double)</b>
+     * @param width нова ширина таблиці
+     * @param stepNum передається методу init(int)
      */
     public final void init(short width, int stepNum) { // method overloading
         this.width = width;
@@ -110,8 +143,9 @@ public class ViewTable extends ViewResult {
     }
 
     /**
-     * {@linkplain ViewResult#init(double stepX) init(double stepX)}<br>
-     * {@inheritDoc}
+     * Перевизначення (overriding) методу суперкласу; виводить повідомлення про
+     * виконання ініціалізації та викликає метод суперкласу.
+     * {@linkplain ViewResult#init(int stepNum) init(int stepNum)}
      */
     @Override
     public void init(int stepNum) { // method overriding

@@ -321,7 +321,7 @@ public class MainTest implements Serializable {
     }
 }
 ```
-![](images/Screenshot.PNG)
+<img align="center" width="40%" height="40%" src="images/Screenshot.PNG">
 
 ## Завдання 3 (05.03.24)
 
@@ -745,10 +745,373 @@ public class MainTest implements Serializable {
 
 Результати тестування:
 
-![](images/Screenshot2.PNG)
+<img align="center" width="40%" height="40%" src="images/Screenshot2.PNG">
 
 Робота програми:
 
-![](images/Screenshot3.PNG)
+<img align="center" width="40%" height="40%" src="images/Screenshot3.PNG">
 
-![](images/Screenshot4.PNG)
+<img align="center" width="40%" height="40%" src="images/Screenshot4.PNG">
+
+## Завдання 4 (06.03.24)
+
+### Main.java
+
+```java
+package Task4;
+
+import Task3.View;
+
+/**
+ * Виконує визначення та відображення результатів
+ *
+ * @author Киричок Софія
+ * @see Main#main
+ */
+public class Main extends Task3.Main {
+
+    /**Ініціалізує поле {@linkplain ex02.Main#view view}*/
+    public Main(View view) {
+        super(view);
+    }
+
+    /**
+     * Виконується при запуску програми
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        Main main = new Main(new ViewableTable().getView());
+        main.menu();
+    }
+}
+```
+
+###  ViewableTable.java
+
+```java
+package Task4;
+
+import Task3.ViewableResult;
+import Task3.View;
+
+/**
+ * ConcreteCreator. Pattern Factory Method<br>
+ * Оголошує метод, фабрикуючий об'єкти
+ *
+ * @author Киричок Софія
+ * @see ViewableResult
+ * @see ViewableTable#getView()
+ */
+public class ViewableTable extends ViewableResult {
+
+    /**
+     * Створює відображуваний об'єкт {@linkplain ViewTable}
+     *
+     * @return View
+     */
+    @Override
+    public View getView() {
+        return new ViewTable();
+    }
+}
+```
+
+###  ViewTable.java
+
+```java
+package Task4;
+
+import java.util.Formatter;
+import Task2.Item2d;
+import Task3.ViewResult;
+
+/**ConcreteProduct. Pattern Factory Method<br>
+ * Виведення у вигляді таблиці 
+ *
+ * @author Киричок Софія
+ */
+public class ViewTable extends ViewResult {
+
+    /**
+     * Ширина таблиці за замовчуванням
+     */
+    private static final int DEFAULT_WIDTH = 35;
+
+    /**
+     * Ширина таблиці
+     */
+    private short width;
+
+    /**
+     * Встановлює {@linkplain ViewTable#width width} значенням
+     * {@linkplain ViewTable#DEFAULT_WIDTH DEFAULT_WIDTH}<br>
+     * Викликається конструктор суперкласу
+     * {@linkplain ViewResult#ViewResult() ViewResult()}
+     */
+    public ViewTable() {
+        width = DEFAULT_WIDTH;
+    }
+
+    /**
+     * Встановлює {@linkplain ViewTable#width} значенням width Викликається
+     * конструктор суперкласу {@linkplain ViewResult#ViewResult() ViewResult()}
+     *
+     * @param width ширина таблиці
+     */
+    public ViewTable(short width) {
+        this.width = width;
+    }
+
+    /**
+     * Встановлює {@linkplain ViewTable#width} значенням width Викликається
+     * конструктор суперкласу {@linkplain ViewResult#ViewResult() ViewResult()}
+     *
+     * @param width ширина таблиці
+     * @param n кількість елементів колекції; передається суперконструктору
+     */
+    public ViewTable(short width, int n) {
+        super(n);
+        this.width = width;
+    }
+
+    /**
+     * Встановлює {@linkplain ViewTable#width} значенням width
+     *
+     * @param width нова ширина таблиці
+     * @return задана ширина таблиці
+     */
+    public int setWidth(short width) {
+        return this.width = width;
+    }
+
+    /**
+     * Повертає значення ширини таблиці
+     *
+     * @return ширина таблиці
+     */
+    public int getWidth() {
+        return width;
+    }
+
+    /**
+     * Виводить горизонтальний розділювач для таблиці шириною
+     * {@linkplain ViewTable#width} символів
+     */
+    private void outLine() {
+        for (int i = width; i > 0; i--) {
+            System.out.print('-');
+        }
+    }
+
+    /**
+     * Закінчує вивід розділювачем {@linkplain ViewTable#outLine()}
+     *
+     */
+    private void outLineLn() {
+        outLine();
+        System.out.println();
+    }
+
+    /**
+     * Виводить заголовок таблиці
+     */
+    private void outHeader() {
+        Formatter fmt = new Formatter();
+        int partWidth = (width - 3) / 2;
+        fmt.format("%-" + (partWidth - 10) + "s | %-" + partWidth + "s | %s",
+                "Number", "Binary", "Result");
+        System.out.println(fmt.toString());
+    }
+
+    /**
+     * Виводіть "тіло" таблиці символів
+     */
+    private void outBody() {
+
+        int partWidth = (width - 3) / 2;
+        for (Item2d item : getItems()) {
+            Formatter fmt = new Formatter();
+            fmt.format("%-" + (partWidth - 10) + "d | %-" + partWidth + "s | %s%n", item.getNum(), binaryCode(item.getNum()), item.getResult());
+            System.out.printf(fmt.toString());
+        }
+    }
+
+    /**
+     * Перевантаження (overloading) методу суперкласу; визначає поле
+     * {@linkplain ViewTable#width} значением width. Викликає метод
+     * {@linkplain ViewResult#viewInit() viewInit()}
+     *
+     * @param width нова ширина таблиці
+     */
+    public final void init(short width) { // method overloading
+        this.width = width;
+        viewInit();
+
+    }
+
+    /**
+     * Перевантаження (overloading) методу суперкласу; визначає поле
+     * {@linkplain ViewTable#width} значением width. Для об'єкту
+     * {@linkplain ViewTable} викликає метод
+     * {@linkplain ViewTable#init(int stepNum)}
+     *
+     * @param width нова ширина таблиці
+     * @param stepNum передається методу init(int)
+     */
+    public final void init(short width, int stepNum) { // method overloading
+        this.width = width;
+        init(stepNum);
+    }
+
+    /**
+     * Перевизначення (overriding) методу суперкласу; виводить повідомлення про
+     * виконання ініціалізації та викликає метод суперкласу.
+     * {@linkplain ViewResult#init(int stepNum) init(int stepNum)}
+     */
+    @Override
+    public void init(int stepNum) { // method overriding
+        System.out.print("Initialization... ");
+        super.init(stepNum);
+        System.out.println("done. ");
+    }
+
+    /**
+     * Вивід заголовка таблиці
+     */
+    @Override
+    public void viewHeader() {
+        outHeader();
+        outLineLn();
+    }
+
+    /**
+     * Вивід "тіла" таблиці
+     */
+    @Override
+    public void viewBody() {
+        outBody();
+    }
+
+    /**
+     * Вивід кінця таблиці
+     */
+    @Override
+    public void viewFooter() {
+        outLineLn();
+    }
+}
+```
+
+###  MainTest.java
+
+```java
+import java.io.Serializable;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import junit.framework.Assert;
+import java.io.IOException;
+import java.util.Random;
+import Task3.ViewResult;
+import Task4.ViewTable;
+
+/**
+ * Тестування коректності результатів обчислень та серіалізації/десеріалізації
+ *
+ * @author Киричок Софія
+ */
+public class MainTest implements Serializable {
+
+    ViewResult view = new ViewResult(5);
+
+    /**
+     * Перевірка правильності переведення десяткового числа в двійкове
+     */
+    @Test
+    public void testBinaryCode() {
+        assertEquals("0", view.binaryCode(0));
+        assertEquals("1", view.binaryCode(1));
+        assertEquals("101", view.binaryCode(5));
+        assertEquals("111111111", view.binaryCode(511));
+        assertEquals("100000000000", view.binaryCode(2048));
+    }
+
+    /**
+     * Перевірка правильності обрахування повних тетрад
+     */
+    @Test
+    public void testCountTetrads() {
+        assertEquals(1, view.countTetrads("1000"));
+        assertEquals(1, view.countTetrads("1010101"));
+        assertEquals(2, view.countTetrads("10001000"));
+        assertEquals(3, view.countTetrads("100010001000"));
+    }
+
+    @Test
+    public void testTask4() {
+        ViewTable tbl = new ViewTable((short) 15, 10);
+        assertEquals(15, tbl.getWidth());
+        assertEquals(10, tbl.getItems().size());
+    }
+
+    /**
+     * Перевірка серіалізації (коректність відновлення даних)
+     */
+    @Test
+    public void testRestoreT3() {
+        Random random = new Random();
+        ViewResult view1 = new ViewResult(1000);
+        ViewResult view2 = new ViewResult();
+
+        view1.init(random.nextInt(10000));
+
+        try {
+            view1.viewSave();
+        } catch (IOException e) {
+            Assert.fail(e.getMessage());
+        }
+
+        try {
+            view2.viewRestore();
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+
+        assertEquals(view1.getItems().size(), view2.getItems().size());
+    }
+
+    /**
+     * Перевірка серіалізації (коректність відновлення даних)
+     */
+    @Test
+    public void testRestoreT4() {
+        Random random = new Random();
+        ViewTable tbl1 = new ViewTable((short)10, 1000);
+        ViewTable tbl2 = new ViewTable();
+
+        tbl1.init(random.nextInt(5001));
+
+        try {
+            tbl1.viewSave();
+        } catch (IOException e) {
+            Assert.fail(e.getMessage());
+        }
+
+        try {
+            tbl2.viewRestore();
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+
+        assertEquals(tbl1.getItems().size(), tbl2.getItems().size());
+    }
+}
+```
+
+Результати тестування:
+
+<img align="center" width="40%" height="40%" src="images/Screenshot5.PNG">
+
+Робота програми:
+
+<img align="center" width="40%" height="40%" src="images/Screenshot6.PNG">
