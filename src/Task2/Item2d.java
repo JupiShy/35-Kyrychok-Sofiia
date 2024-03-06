@@ -1,4 +1,4 @@
-package Task2Classes;
+package Task2;
 
 import java.io.Serializable;
 

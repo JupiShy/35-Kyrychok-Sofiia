@@ -1,5 +1,6 @@
 package Task3;
 
+import Task2.Item2d;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,7 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
-import Task2Classes.*;
 
 /**
  *
@@ -99,7 +99,7 @@ public class ViewResult implements View {
     @Override
     public void viewInit() {
         Random random = new Random();
-        init(random.nextInt(10000));
+        init(random.nextInt(5001));
     }
 
     /**

@@ -26,7 +26,7 @@ public class Main {
     /**
      * Відображує меню
      */
-    private void menu() {
+    protected void menu() {
         String s = null;
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         do {
