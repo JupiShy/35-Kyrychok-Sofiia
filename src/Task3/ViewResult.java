@@ -23,7 +23,7 @@ public class ViewResult implements View {
     /**
      * Визначає кількість значень для обрахування за замовчуванням
      */
-    private static final int DEFAULT_NUM = 5;
+    private static final int DEFAULT_NUM = 10;
 
     /**
      * Колекція аргументів та результатів обчислень

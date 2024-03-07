@@ -4,8 +4,9 @@ import java.util.Formatter;
 import Task2.Item2d;
 import Task3.ViewResult;
 
-/**ConcreteProduct. Pattern Factory Method<br>
- * Виведення у вигляді таблиці 
+/**
+ * ConcreteProduct. Pattern Factory Method<br>
+ * Виведення у вигляді таблиці
  *
  * @author Киричок Софія
  */
@@ -14,7 +15,7 @@ public class ViewTable extends ViewResult {
     /**
      * Ширина таблиці за замовчуванням
      */
-    private static final int DEFAULT_WIDTH = 35;
+    private static final int DEFAULT_WIDTH = 51;
 
     /**
      * Ширина таблиці
@@ -41,6 +42,7 @@ public class ViewTable extends ViewResult {
         this.width = width;
     }
 
+    
     /**
      * Встановлює {@linkplain ViewTable#width} значенням width Викликається
      * конструктор суперкласу {@linkplain ViewResult#ViewResult() ViewResult()}
@@ -52,7 +54,7 @@ public class ViewTable extends ViewResult {
         super(n);
         this.width = width;
     }
-
+    
     /**
      * Встановлює {@linkplain ViewTable#width} значенням width
      *
@@ -97,7 +99,7 @@ public class ViewTable extends ViewResult {
     private void outHeader() {
         Formatter fmt = new Formatter();
         int partWidth = (width - 3) / 2;
-        fmt.format("%-" + (partWidth - 10) + "s | %-" + partWidth + "s | %s",
+        fmt.format("%-" + (partWidth - 15) + "s | %-" + partWidth + "s | %s",
                 "Number", "Binary", "Result");
         System.out.println(fmt.toString());
     }
@@ -110,7 +112,7 @@ public class ViewTable extends ViewResult {
         int partWidth = (width - 3) / 2;
         for (Item2d item : getItems()) {
             Formatter fmt = new Formatter();
-            fmt.format("%-" + (partWidth - 10) + "d | %-" + partWidth + "s | %s%n", item.getNum(), binaryCode(item.getNum()), item.getResult());
+            fmt.format("%-" + (partWidth - 15) + "d | %-" + partWidth + "s | %s%n", item.getNum(), binaryCode(item.getNum()), item.getResult());
             System.out.printf(fmt.toString());
         }
     }
