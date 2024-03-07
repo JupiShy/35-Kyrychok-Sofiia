@@ -6,9 +6,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author megas
+/**Макрокоманда Pattern Command <br>
+ * Колекція об'єктів класу ConsoleCommand
+ * @author Sofiia Kyrychok
  */
 public class Menu implements Command {
 

@@ -1,3 +1,4 @@
+
 import java.io.Serializable;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
@@ -6,6 +7,9 @@ import java.io.IOException;
 import java.util.Random;
 import Task3.ViewResult;
 import Task4.ViewTable;
+import Task2.Item2d;
+import Task5.ChangeItemCommand;
+import Task5.ChangeConsoleCommand;
 
 /**
  * Тестування коректності результатів обчислень та серіалізації/десеріалізації
@@ -78,7 +82,7 @@ public class MainTest implements Serializable {
     @Test
     public void testRestoreT4() {
         Random random = new Random();
-        ViewTable tbl1 = new ViewTable((short)10, 1000);
+        ViewTable tbl1 = new ViewTable((short) 10, 1000);
         ViewTable tbl2 = new ViewTable();
 
         tbl1.init(random.nextInt(5001));
@@ -96,5 +100,37 @@ public class MainTest implements Serializable {
         }
 
         assertEquals(tbl1.getItems().size(), tbl2.getItems().size());
+    }
+
+    /**
+     * Перевірка здвигу чисел
+     */
+    @Test
+    public void testExecute() {
+        ChangeItemCommand cmd = new ChangeItemCommand();
+        Random random = new Random();
+        cmd.setItem(new Item2d());
+        int num, offset;
+        for (int ctr = 0; ctr < 1000; ctr++) {
+            num = random.nextInt(5001);
+            cmd.getItem().setNum(num);
+            offset = random.nextInt(10);
+            cmd.setOffset(offset);
+            cmd.execute();
+
+            assertEquals(num * offset, cmd.getItem().getNum());
+        }
+    }
+
+    /**
+     * Тест відображення і виклику {@linkplain ChangeConsoleCommand} 
+     */
+    @Test
+    public void testChangeConsoleCommand() {
+        ChangeConsoleCommand cmd = new ChangeConsoleCommand(new ViewResult());
+        cmd.getView().viewInit();
+        cmd.execute();
+        assertEquals("'c'hange", cmd.toString());
+        assertEquals('c', cmd.getKey());
     }
 }

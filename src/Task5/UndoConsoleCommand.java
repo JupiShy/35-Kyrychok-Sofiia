@@ -1,15 +1,14 @@
 package Task5;
 
 import Task3.View;
-
-/**
+/**Консольна команда Undo 
  *
  * @author Sofiia Kyrychok
  */
 public class UndoConsoleCommand implements ConsoleCommand {
 
     private final View view;
-
+    
     public UndoConsoleCommand(View view) {
         this.view = view;
     }
@@ -26,9 +25,10 @@ public class UndoConsoleCommand implements ConsoleCommand {
 
     @Override
     public void execute() {
-        System.out.println("Restore last saved.");
+        UndoReserve un = new UndoReserve(view);
+        System.out.println("Undo last command.");
         try {
-            view.viewRestore();
+            un.undo();
         } catch (Exception e) {
             System.err.println("Serialization error: " + e);
         }

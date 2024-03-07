@@ -1,13 +1,13 @@
 package Task5;
 
 import Task3.View;
-/**
+/**Консольна команда Generate
  *
  * @author Sofiia Kyrychok
  */
 public class GenerateConsoleCommand implements ConsoleCommand {
     
-    private View view;
+    private final View view;
     
     public GenerateConsoleCommand(View view){
         this.view = view;

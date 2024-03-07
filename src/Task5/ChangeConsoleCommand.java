@@ -5,7 +5,7 @@ import Task3.View;
 import Task3.ViewResult;
 import java.util.Random;
 
-/**
+/**Консольна команда, що виконує зміну значень елементів на випадковий здвиг
  *
  * @author Sofiia Kyrychok
  */

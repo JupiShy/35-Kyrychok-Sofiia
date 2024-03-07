@@ -2,7 +2,7 @@ package Task5;
 
 import Task3.View;
 
-/**
+/**Консольна команда View
  *
  * @author Sofiia Kyrychok
  */

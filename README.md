@@ -1115,3 +1115,717 @@ public class MainTest implements Serializable {
 Робота програми:
 
 <img align="center" width="40%" height="40%" src="images/Screenshot6.PNG">
+
+
+## Завдання 5 (06.03.24)
+
+```java
+package Task5;
+
+import Task3.View;
+import Task4.ViewableTable;
+
+/**Формує та відображає меню
+ * Реалізує шаблон Singleton
+ *
+ * @author Sofiia Kyrychok
+ */
+public class Application {
+
+    private static final Application instance = new Application();
+
+    private Application() {}
+
+    public static Application getInstance() {
+        return instance;
+    }
+
+    private final View view = new ViewableTable().getView();
+
+    private final Menu menu = new Menu();
+
+    public void run() {
+        menu.add(new ViewConsoleCommand(view));
+        menu.add(new GenerateConsoleCommand(view));
+        menu.add(new ChangeConsoleCommand(view));
+        menu.add(new SaveConsoleCommand(view));
+        menu.add(new RestoreConsoleCommand(view));
+        menu.add(new UndoConsoleCommand(view));
+        menu.add(new SortConsoleCommand(view));
+        menu.execute();
+    }
+}
+```
+
+```java
+package Task5;
+
+import Task2.Item2d;
+import Task3.View;
+import Task3.ViewResult;
+import java.util.Random;
+
+/**Консольна команда, що виконує зміну значень елементів на випадковий здвиг
+ *
+ * @author Sofiia Kyrychok
+ */
+public class ChangeConsoleCommand
+        extends ChangeItemCommand
+        implements ConsoleCommand {
+
+    private View view;
+
+    public View getView() {
+        return view;
+    }
+
+    public View setView(View view) {
+        return this.view = view;
+    }
+
+    public ChangeConsoleCommand(View view) {
+        this.view = view;
+    }
+
+    @Override
+    public char getKey() {
+        return 'c';
+    }
+
+    @Override
+    public String toString() {
+        return "'c'hange";
+    }
+
+    @Override
+    public void execute() {
+        Random random = new Random();
+
+        System.out.println("Change item: scale factor " + setOffset(random.nextInt(20) + 1));
+        for (Item2d item : ((ViewResult) view).getItems()) {
+            if (item.getNum() > 950000) {
+                System.out.println("Maximum numbers size reached.");
+                break;
+            } else {
+                super.setItem(item);
+                super.execute();
+            }
+        }
+        view.viewShow();
+    }
+}
+```
+
+```java
+package Task5;
+
+import Task2.Item2d;
+import Task3.ViewResult;
+
+/**Консольна команда Change Item
+ *
+ * @author Sofiia Kyrychok
+ */
+public class ChangeItemCommand implements Command {
+
+    private Item2d item;
+
+    private int offset;
+
+    public Item2d getItem() {
+        return item;
+    }
+
+    public Item2d setItem(Item2d item) {
+        return this.item = item;
+    }
+
+    public int setOffset(int offset) {
+        return this.offset = offset;
+    }
+
+    public int getOffset() {
+        return offset;
+    }
+
+    @Override
+    public void execute() {
+        ViewResult view = new ViewResult();
+        item.setNum(item.getNum() * offset);
+        item.setResult(view.countTetrads(view.binaryCode(item.getNum())));
+    }
+}
+
+```
+
+```java
+package Task5;
+
+import Task3.View;
+/**Консольна команда Generate
+ *
+ * @author Sofiia Kyrychok
+ */
+public class GenerateConsoleCommand implements ConsoleCommand {
+    
+    private final View view;
+    
+    public GenerateConsoleCommand(View view){
+        this.view = view;
+    }
+    
+    @Override
+    public char getKey(){
+        return 'g';
+    }
+    
+    @Override
+    public String toString(){
+        return "'g'enerate";
+    }
+    
+    @Override
+    public void execute(){
+        System.out.println("Random generation.");
+        view.viewInit();
+        view.viewShow();
+    }
+}
+
+```
+
+```java
+package Task5;
+
+/**Pattern Command, Worker Thread
+ *
+ * @author Sofiia Kyrychok
+ */
+public interface Command {
+    
+    public void execute();
+}
+```
+
+```java
+package Task5;
+
+/**Інтерфейс консольної команди
+ * Pattern Command
+ *
+ * @author Sofiia Kyrychok
+ */
+public interface ConsoleCommand extends Command{
+    
+    public char getKey();
+}
+```
+
+```java
+package Task5;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+/**Макрокоманда Pattern Command <br>
+ * Колекція об'єктів класу ConsoleCommand
+ * @author Sofiia Kyrychok
+ */
+public class Menu implements Command {
+
+    private List<ConsoleCommand> menu = new ArrayList<ConsoleCommand>();
+
+    public ConsoleCommand add(ConsoleCommand command){
+        menu.add(command);
+        return command;
+    }
+    
+    @Override
+    public String toString(){
+        String s = "Enter command...\n";
+        for(ConsoleCommand c : menu){
+            s += c + ", ";
+        }
+        s += "'q'uit: ";
+        return s;
+    }
+    
+    @Override
+    public void execute() {
+        String s = null;
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        menu:
+        while (true) {
+            do {
+                System.out.print(this);
+                try {
+                    s = in.readLine();
+                } catch (IOException e) {
+                    System.err.println("Error: " + e);
+                    System.exit(0);
+                }
+            } while (s.length() != 1);
+            char key = s.charAt(0);
+            if (key == 'q') {
+                System.out.println("Exit.");
+                break menu;
+            }
+            for (ConsoleCommand c : menu) {
+                if (s.charAt(0) == c.getKey()) {
+                    c.execute();
+                    continue menu;
+                }
+            }
+            System.out.println("Wrong command.");
+            continue menu;
+        }
+    }
+}
+
+```
+
+```java
+package Task5;
+
+/**Обчислення та відображення результатів
+ * Містить реалізацію статичного методу main()
+ *
+ * @author Sofiia Kyrychok
+ */
+public class Main {
+    
+    public static void main(String[] args){
+        Application app = Application.getInstance();
+        app.run();
+    }
+}
+
+```
+
+```java
+package Task5;
+
+import Task3.View;
+
+/**Консольна команда Restore
+ *
+ * @author Sofiia Kyrychok
+ */
+public class RestoreConsoleCommand implements ConsoleCommand {
+
+    private View view;
+
+    public RestoreConsoleCommand(View view) {
+        this.view = view;
+    }
+
+    @Override
+    public char getKey() {
+        return 'r';
+    }
+
+    @Override
+    public String toString() {
+        return "'r'estore";
+    }
+
+    @Override
+    public void execute() {
+        System.out.println("Restore last saved.");
+        try {
+            view.viewRestore();
+        } catch (Exception e) {
+            System.err.println("Serialization error: " + e);
+        }
+        view.viewShow();
+    }
+}
+
+```
+
+```java
+package Task5;
+
+import java.io.IOException;
+import Task3.View;
+
+/**Консольна команда Save
+ * @author Sofiia Kyrychok
+ */
+public class SaveConsoleCommand implements ConsoleCommand {
+
+    private final View view;
+
+    public SaveConsoleCommand(View view) {
+        this.view = view;
+    }
+
+    @Override
+    public char getKey() {
+        return 's';
+    }
+
+    @Override
+    public String toString() {
+        return "'s'ave";
+    }
+
+    @Override
+    public void execute() {
+        System.out.println("Save current.");
+        try {
+            view.viewSave();
+        } catch (IOException e) {
+            System.err.println("Serialization error: " + e);
+        }
+        view.viewShow();
+    }
+}
+
+```
+
+```java
+package Task5;
+
+import Task2.Item2d;
+import Task3.View;
+import Task3.ViewResult;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**Консольна команда Sort
+ *
+ * @author Sofiia Kyrychok
+ */
+public class SortConsoleCommand implements ConsoleCommand {
+
+    private final View view;
+
+    public SortConsoleCommand(View view) {
+        this.view = view;
+    }
+
+    @Override
+    public char getKey() {
+        return 'S';
+    }
+
+    @Override
+    public String toString() {
+        return "'S'ort";
+    }
+
+    @Override
+    public void execute() {
+
+        UndoReserve un = new UndoReserve(view);
+        try {
+            un.write();
+        } catch (IOException e) {
+            System.out.println("Writing error: " + e);
+        } catch (Exception ex) {
+            Logger.getLogger(SortConsoleCommand.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("loshara");
+        }
+        ArrayList<Item2d> itemsList = ((ViewResult) view).getItems();
+        Collections.sort(itemsList, Comparator.comparingDouble(Item2d::getNum));
+        view.viewShow();
+    }
+}
+
+```
+
+```java
+package Task5;
+
+import Task3.View;
+/**Консольна команда Undo 
+ *
+ * @author Sofiia Kyrychok
+ */
+public class UndoConsoleCommand implements ConsoleCommand {
+
+    private final View view;
+    
+    public UndoConsoleCommand(View view) {
+        this.view = view;
+    }
+
+    @Override
+    public char getKey() {
+        return 'u';
+    }
+
+    @Override
+    public String toString() {
+        return "'u'ndo";
+    }
+
+    @Override
+    public void execute() {
+        UndoReserve un = new UndoReserve(view);
+        System.out.println("Undo last command.");
+        try {
+            un.undo();
+        } catch (Exception e) {
+            System.err.println("Serialization error: " + e);
+        }
+        view.viewShow();
+    }
+}
+
+```
+
+```java
+package Task5;
+
+import Task2.Item2d;
+import Task3.View;
+import Task3.ViewResult;
+import java.util.ArrayList;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+/**Виконує функціонал консольної команди Undo
+ *
+ * @author Sofiia Kyrychok
+ */
+public class UndoReserve {
+
+    private static final String FNAME1 = "last.bin";
+    private static final String FNAME2 = "back.bin";
+
+    private ArrayList<Item2d> items;
+    
+    private View view;
+
+    public UndoReserve(View view) {
+        this.view = view;
+    }
+    
+
+    public void write() throws IOException, Exception {
+
+        items = ((ViewResult) view).getItems();
+        reWrite();
+        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(FNAME1));
+        os.writeObject(items);
+        os.flush();
+        os.close();
+        //System.out.println("Zapisav F1 write");
+    }
+
+    @SuppressWarnings("unchecked")
+    public void reWrite() throws Exception {
+
+        items = ((ViewResult) view).getItems();
+        ObjectInputStream is = new ObjectInputStream(new FileInputStream(FNAME1));
+        items = (ArrayList<Item2d>) is.readObject();
+        is.close();
+        //System.out.println("Prochitav F1 rewrite");
+
+        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(FNAME2));
+        os.writeObject(items);
+        os.flush();
+        os.close();
+        //System.out.println("Zapisav v F2 rewrite");
+    }
+
+    @SuppressWarnings("unchecked")
+    public void undo() throws Exception {
+        try {
+            ObjectInputStream is = new ObjectInputStream(new FileInputStream(FNAME2));
+            items = (ArrayList<Item2d>) is.readObject();
+            //System.out.println("Prochitav F2 undo");
+            is.close();
+        } catch (ClassNotFoundException ex) {
+        }
+    }
+}
+
+```
+
+```java
+package Task5;
+
+import Task3.View;
+
+/**Консольна команда View
+ *
+ * @author Sofiia Kyrychok
+ */
+public class ViewConsoleCommand implements ConsoleCommand {
+
+    private final View view;
+
+    public ViewConsoleCommand(View view) {
+        this.view = view;
+    }
+
+    @Override
+    public char getKey() {
+        return 'v';
+    }
+
+    @Override
+    public String toString() {
+        return "'v'iew";
+    }
+
+    @Override
+    public void execute() {
+        System.out.println("View current.");
+        view.viewShow();
+    }
+}
+
+```
+
+```java
+
+import java.io.Serializable;
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import junit.framework.Assert;
+import java.io.IOException;
+import java.util.Random;
+import Task3.ViewResult;
+import Task4.ViewTable;
+import Task2.Item2d;
+import Task5.ChangeItemCommand;
+import Task5.ChangeConsoleCommand;
+
+/**
+ * Тестування коректності результатів обчислень та серіалізації/десеріалізації
+ *
+ * @author Киричок Софія
+ */
+public class MainTest implements Serializable {
+
+    ViewResult view = new ViewResult(5);
+
+    /**
+     * Перевірка правильності переведення десяткового числа в двійкове
+     */
+    @Test
+    public void testBinaryCode() {
+        assertEquals("0", view.binaryCode(0));
+        assertEquals("1", view.binaryCode(1));
+        assertEquals("101", view.binaryCode(5));
+        assertEquals("111111111", view.binaryCode(511));
+        assertEquals("100000000000", view.binaryCode(2048));
+    }
+
+    /**
+     * Перевірка правильності обрахування повних тетрад
+     */
+    @Test
+    public void testCountTetrads() {
+        assertEquals(1, view.countTetrads("1000"));
+        assertEquals(1, view.countTetrads("1010101"));
+        assertEquals(2, view.countTetrads("10001000"));
+        assertEquals(3, view.countTetrads("100010001000"));
+    }
+
+    @Test
+    public void testTask4() {
+        ViewTable tbl = new ViewTable((short) 15, 10);
+        assertEquals(15, tbl.getWidth());
+        assertEquals(10, tbl.getItems().size());
+    }
+
+    /**
+     * Перевірка серіалізації (коректність відновлення даних)
+     */
+    @Test
+    public void testRestoreT3() {
+        Random random = new Random();
+        ViewResult view1 = new ViewResult(1000);
+        ViewResult view2 = new ViewResult();
+
+        view1.init(random.nextInt(10000));
+
+        try {
+            view1.viewSave();
+        } catch (IOException e) {
+            Assert.fail(e.getMessage());
+        }
+
+        try {
+            view2.viewRestore();
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+
+        assertEquals(view1.getItems().size(), view2.getItems().size());
+    }
+
+    /**
+     * Перевірка серіалізації (коректність відновлення даних)
+     */
+    @Test
+    public void testRestoreT4() {
+        Random random = new Random();
+        ViewTable tbl1 = new ViewTable((short) 10, 1000);
+        ViewTable tbl2 = new ViewTable();
+
+        tbl1.init(random.nextInt(5001));
+
+        try {
+            tbl1.viewSave();
+        } catch (IOException e) {
+            Assert.fail(e.getMessage());
+        }
+
+        try {
+            tbl2.viewRestore();
+        } catch (Exception e) {
+            Assert.fail(e.getMessage());
+        }
+
+        assertEquals(tbl1.getItems().size(), tbl2.getItems().size());
+    }
+
+    /**
+     * Перевірка здвигу чисел
+     */
+    @Test
+    public void testExecute() {
+        ChangeItemCommand cmd = new ChangeItemCommand();
+        Random random = new Random();
+        cmd.setItem(new Item2d());
+        int num, offset;
+        for (int ctr = 0; ctr < 1000; ctr++) {
+            num = random.nextInt(5001);
+            cmd.getItem().setNum(num);
+            offset = random.nextInt(10);
+            cmd.setOffset(offset);
+            cmd.execute();
+
+            assertEquals(num * offset, cmd.getItem().getNum());
+        }
+    }
+
+    /**
+     * Тест відображення і виклику {@linkplain ChangeConsoleCommand} 
+     */
+    @Test
+    public void testChangeConsoleCommand() {
+        ChangeConsoleCommand cmd = new ChangeConsoleCommand(new ViewResult());
+        cmd.getView().viewInit();
+        cmd.execute();
+        assertEquals("'c'hange", cmd.toString());
+        assertEquals('c', cmd.getKey());
+    }
+}
+```

@@ -3,7 +3,8 @@ package Task5;
 import Task3.View;
 import Task4.ViewableTable;
 
-/**
+/**Формує та відображає меню
+ * Реалізує шаблон Singleton
  *
  * @author Sofiia Kyrychok
  */
@@ -11,8 +12,7 @@ public class Application {
 
     private static final Application instance = new Application();
 
-    private Application() {
-    }
+    private Application() {}
 
     public static Application getInstance() {
         return instance;

@@ -3,8 +3,7 @@ package Task5;
 import java.io.IOException;
 import Task3.View;
 
-/**
- *
+/**Консольна команда Save
  * @author Sofiia Kyrychok
  */
 public class SaveConsoleCommand implements ConsoleCommand {
