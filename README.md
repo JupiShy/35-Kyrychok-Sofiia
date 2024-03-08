@@ -2610,7 +2610,9 @@ public class TestTask6 {
 ```
 
 Результати тестування:
+
 <img align="center" width="70%" height="70%" src="images/Screenshot7.PNG">
 
 Робота програми:
+
 <img align="center" width="40%" height="40%" src="images/Screenshot8.PNG">
