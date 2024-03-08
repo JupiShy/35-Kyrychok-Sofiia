@@ -47,7 +47,7 @@ public class Menu implements Command {
             char key = s.charAt(0);
             if (key == 'q') {
                 System.out.println("Exit.");
-                break menu;
+                System.exit(0);
             }
             for (ConsoleCommand c : menu) {
                 if (s.charAt(0) == c.getKey()) {
