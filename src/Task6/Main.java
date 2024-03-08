@@ -18,9 +18,8 @@ import Task5.ViewConsoleCommand;
 public class Main {
 
     /**
-     * Об'єкт, рреалізуючий інтерфейс {@linkplain View}; обслуговує колекцію
+     * Об'єкт, реалізуючий інтерфейс {@linkplain View}; обслуговує колекцію
      * об'єктів {@linkplain Task2.Item2d};
-     *
      *
      * Ініціалізуються за допомогою Factory Method
      */
@@ -31,7 +30,7 @@ public class Main {
     private Menu menu = new Menu();
 
     /**
-     * Обработка команд пользователя
+     * Обробка команд користувача
      */
     public void run() {
         menu.add(new ViewConsoleCommand(view));

@@ -1,3 +1,5 @@
+package Tests;
+
 
 import java.io.Serializable;
 import org.junit.Test;

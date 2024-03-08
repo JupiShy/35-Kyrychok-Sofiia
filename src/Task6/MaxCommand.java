@@ -5,54 +5,55 @@ import Task3.ViewResult;
 import Task5.Command;
 
 /**
+ * Задача, що використовується обробником потоку; Pattern Worker Thread
  *
- * @author megas
+ * @author Sofiia Kyrychok
  */
 public class MaxCommand implements Command /*, Runnable */ {
 
     /**
-     * Хранит результат обработки коллекции
+     * Зберігає результат обробки колекції
      */
     private int result = -1;
     /**
-     * Флаг готовности результата
+     * Прапорець готовності результату
      */
     private int progress = 0;
     /**
-     * Обслуживает коллекцию объектов {@linkplain ex01.Item2d}
+     * Обслуговує колекцію об'єктів {@linkplain Task2.Item2d}
      */
     private ViewResult viewResult;
 
     /**
-     * Возвращает поле {@linkplain MaxCommand#viewResult}
+     * Повертає поле {@linkplain MaxCommand#viewResult}
      *
-     * @return значение {@linkplain MaxCommand#viewResult}
+     * @return значення {@linkplain MaxCommand#viewResult}
      */
     public ViewResult getViewResult() {
         return viewResult;
     }
 
     /**
-     * Устанавливает поле {@linkplain MaxCommand#viewResult}
+     * Встановлює поле {@linkplain MaxCommand#viewResult}
      *
-     * @param viewResult значение для {@linkplain MaxCommand#viewResult}
-     * @return новое значение {@linkplain MaxCommand#viewResult}
+     * @param viewResult значення для {@linkplain MaxCommand#viewResult}
+     * @return нове значення {@linkplain MaxCommand#viewResult}
      */
     public ViewResult setViewResult(ViewResult viewResult) {
         return this.viewResult = viewResult;
     }
 
     /**
-     * Инициализирует поле {@linkplain MaxCommand#viewResult}
+     * Ініціалізує поле {@linkplain MaxCommand#viewResult}
      *
-     * @param viewResult объект класса {@linkplain ViewResult}
+     * @param viewResult об'єкт класу {@linkplain ViewResult}
      */
     public MaxCommand(ViewResult viewResult) {
         this.viewResult = viewResult;
     }
 
     /**
-     * Возвращает результат
+     * Повертає результат
      *
      * @return поле {@linkplain MaxCommand#result}
      */
@@ -61,9 +62,9 @@ public class MaxCommand implements Command /*, Runnable */ {
     }
 
     /**
-     * Проверяет готовность результата
+     * Перевіряє готовність результату
      *
-     * @return false - если результат найден, иначе - true
+     * @return false - якщо результат знайдено, інакше - true
      * @see MaxCommand#result
      */
     public boolean running() {
@@ -71,8 +72,8 @@ public class MaxCommand implements Command /*, Runnable */ {
     }
 
     /**
-     * Используется обработчиком потока {@linkplain CommandQueue}; шаблон Worker
-     * Thread
+     * Використовується обробником потоку {@linkplain CommandQueue}; Pattern
+     * Worker Thread
      */
     @Override
     public void execute() {
@@ -86,7 +87,7 @@ public class MaxCommand implements Command /*, Runnable */ {
                 result = idx;
             }
             progress = idx * 100 / size;
-            
+
             if (idx % (size / 3) == 0) {
                 System.out.println("Max " + progress + "%");
             }
@@ -101,8 +102,4 @@ public class MaxCommand implements Command /*, Runnable */ {
         progress = 100;
 
     }
-
-    /* @Override public void run() { execute(); }
-/*
-     */
 }

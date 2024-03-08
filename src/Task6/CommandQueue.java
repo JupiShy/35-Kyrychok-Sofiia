@@ -4,35 +4,37 @@ import java.util.Vector;
 import Task5.Command;
 
 /**
+ * Створює обробник потоку, виконуючого об'єкти  інтерфейсом Command;
+ * Pattern Worker Thread
  *
  * @author Sofiia Kyrychok
  */
-public class CommandQueue implements Queue{
+public class CommandQueue implements Queue {
 
     /**
-     * Очередь задач
+     * Черга задач
      */
     private Vector<Command> tasks;
     /**
-     * Флаг ожидания
+     * Прапорецт очікування
      */
     private boolean waiting;
     /**
-     * Флаг завершения
+     * Прапорець завершення
      */
     private boolean shutdown;
 
     /**
-     * Устанавливает флаг завершения
+     * Встановлює прапорець завершення
      */
     public void shutdown() {
         shutdown = true;
     }
 
     /**
-     * Инициализация {@linkplain CommandQueue#tasks}
+     * Ініціалізація {@linkplain CommandQueue#tasks}
      * {@linkplain CommandQueue#waiting}
-     * {@linkplain CommandQueue#waiting}; создает поток для класса
+     * {@linkplain CommandQueue#waiting}; створює поток для класу
      * {@linkplain CommandQueue.Worker}
      */
     public CommandQueue() {
@@ -55,7 +57,7 @@ public class CommandQueue implements Queue{
     public Command take() {
         if (tasks.isEmpty()) {
             synchronized (this) {
-                
+
                 waiting = true;
                 try {
                     wait();
@@ -68,17 +70,14 @@ public class CommandQueue implements Queue{
     }
 
     /**
-     * Обслуживает очередь задач; шаблон Worker Thread
+     * Обслуговує чергу задач; Pattern Worker Thread
      *
-     * @author xone
-     * @version 1.0
      * @see Runnable
      */
     private class Worker implements Runnable {
 
         /**
-         * Извлекает из очереди готовые к выполнению задачи; шаблон Worker
-         * Thread
+         * Вилучає з черги готові до виконання задачі; Pattern Worker Thread
          */
         @Override
         public void run() {

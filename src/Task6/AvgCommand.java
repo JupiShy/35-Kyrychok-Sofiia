@@ -4,75 +4,77 @@ import Task5.Command;
 import Task3.ViewResult;
 import Task2.Item2d;
 import java.util.concurrent.TimeUnit;
+
 /**
+ * Задача, що використовується обробником потоку; Pattern Worker Thread
  *
  * @author Sofiia Kyrychok
  */
 public class AvgCommand implements Command {
 
     /**
-     * Хранит результат обработки коллекции
+     * Зберігає результат обробки колекції
      */
     private int result = 0;
     /**
-     * Флаг готовности результата
+     * Прапорець готовності результату
      */
     private int progress = 0;
     /**
-     * Обслуживает коллекцию объектов {@linkplain ex01.Item2d}
+     * Обслуговує колекцію об'єктів {@linkplain Task2.Item2d}
      */
     private ViewResult viewResult;
 
     /**
-     * Возвращает поле {@linkplain MaxCommand#viewResult}
+     * Повертає поле {@linkplain AvgCommand#viewResult}
      *
-     * @return значение {@linkplain MaxCommand#viewResult}
+     * @return значення {@linkplain AvgCommand#viewResult}
      */
     public ViewResult getViewResult() {
         return viewResult;
     }
 
     /**
-     * Устанавливает поле {@linkplain MaxCommand#viewResult}
+     * Встановлює поле {@linkplain AvgCommand#viewResult}
      *
-     * @param viewResult значение для {@linkplain MaxCommand#viewResult}
-     * @return новое значение {@linkplain MaxCommand#viewResult}
+     * @param viewResult значення для {@linkplain AvgCommand#viewResult}
+     * @return нове значення {@linkplain AvgCommand#viewResult}
      */
     public ViewResult setViewResult(ViewResult viewResult) {
         return this.viewResult = viewResult;
     }
 
     /**
-     * Инициализирует поле {@linkplain MaxCommand#viewResult}
+     * Ініціалізує поле {@linkplain AvgCommand#viewResult}
      *
-     * @param viewResult объект класса {@linkplain ViewResult}
+     * @param viewResult об'єкт класу {@linkplain ViewResult}
      */
     public AvgCommand(ViewResult viewResult) {
         this.viewResult = viewResult;
     }
 
     /**
-     * Возвращает результат
+     * Повертає результат
      *
-     * @return поле {@linkplain MaxCommand#result}
+     * @return поле {@linkplain AvgCommand#result}
      */
     public double getResult() {
         return result;
     }
 
     /**
-     * Проверяет готовность результата
+     * Перевіряє готовність результату
      *
-     * @return false - если результат найден, иначе - true
-     * @see MaxCommand#result
+     * @return false - якщо результат знайдено, інакше - true
+     * @see AvgCommand#result
      */
     public boolean running() {
         return progress < 100;
     }
 
     /**
-     * Используется обработчиком потока {@linkplain CommandQueue}; шаблон Worker
-     * Thread
+     * Використовується обробником потоку {@linkplain CommandQueue}; Pattern
+     * Worker Thread
      */
     @Override
     public void execute() {
@@ -95,11 +97,7 @@ public class AvgCommand implements Command {
         }
         result /= size;
         System.out.println("Average amount of tetrads done. Result = " + result);
-        
+
         progress = 100;
     }
-    /**
-     * @Override public void run() { execute(); }
-/*
-     */
 }

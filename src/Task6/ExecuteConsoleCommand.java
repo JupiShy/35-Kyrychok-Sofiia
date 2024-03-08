@@ -5,45 +5,44 @@ import Task3.View;
 import Task3.ViewResult;
 import Task5.ConsoleCommand;
 
-
 /**
+ * Консольна команда Execute all threads; Pattern Command
  *
  * @author Sofiia Kyrychok
  */
 public class ExecuteConsoleCommand implements ConsoleCommand {
 
     /**
-     * Объект, реализующий интерфейс {@linkplain View}; обслуживает коллекцию
-     * объектов {@linkplain ex01.Item2d}
+     * Об'єкт, реалізуючий інтерфейс {@linkplain View}; обслуговує колекцію
+     * об'єктів {@linkplain Task2.Item2d};
      */
     private View view;
 
     /**
-     * Возвращает поле {@linkplain ExecuteConsoleCommand#view}
+     * Повертає поле {@linkplain ExecuteConsoleCommand#view}
      *
-     * @return значение {@linkplain ExecuteConsoleCommand#view}
+     * @return значення {@linkplain ExecuteConsoleCommand#view}
      */
     public View getView() {
         return view;
     }
 
     /**
-     * Устанавливает поле {@linkplain ExecuteConsoleCommand#view}
+     * Встановлює поле {@linkplain ExecuteConsoleCommand#view}
      *
-     * @param view значение для {@linkplain ExecuteConsoleCommand#view}
-     * @return новое значение {@linkplain ExecuteConsoleCommand#view}
+     * @param view значення для {@linkplain ExecuteConsoleCommand#view}
+     * @return нове значение {@linkplain ExecuteConsoleCommand#view}
      */
     public View setView(View view) {
         return this.view = view;
     }
 
     /**
-     * Инициализирует поле {@linkplain ExecuteConsoleCommand#view}
+     * Ініціалізує поле {@linkplain ExecuteConsoleCommand#view}
      *
-     * @param view объект, реализующий {@linkplain View}
+     * @param view об'єкт, реалізуючий {@linkplain View}
      */
-
-public ExecuteConsoleCommand(View view) {
+    public ExecuteConsoleCommand(View view) {
         this.view = view;
     }
 
@@ -59,29 +58,26 @@ public ExecuteConsoleCommand(View view) {
 
     @Override
     public void execute() {
-        /**/
+
         CommandQueue queue1 = new CommandQueue();
         CommandQueue queue2 = new CommandQueue();
-        
+
         MaxCommand maxCommand = new MaxCommand((ViewResult) view);
         AvgCommand avgCommand = new AvgCommand((ViewResult) view);
         MinMaxCommand minMaxCommand = new MinMaxCommand((ViewResult) view);
         System.out.println("Execute all threads...");
-        
-/*
-         */
+
         queue1.put(minMaxCommand);
         queue2.put(maxCommand);
         queue2.put(avgCommand);
-        
-        /**/
+
         try {
             while (avgCommand.running()
                     || maxCommand.running()
                     || minMaxCommand.running()) {
                 TimeUnit.MILLISECONDS.sleep(100);
             }
-            
+
             queue1.shutdown();
             queue2.shutdown();
 

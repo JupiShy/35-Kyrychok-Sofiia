@@ -1844,3 +1844,773 @@ public class MainTest implements Serializable {
 
 ## Завдання 6
 (08.03.24)
+
+```java
+package Task6;
+
+import Task3.View;
+import Task4.ViewableTable;
+import Task5.ChangeConsoleCommand;
+import Task5.GenerateConsoleCommand;
+import Task5.Menu;
+import Task5.RestoreConsoleCommand;
+import Task5.SaveConsoleCommand;
+import Task5.SortConsoleCommand;
+import Task5.UndoConsoleCommand;
+import Task5.ViewConsoleCommand;
+
+/**Обчислення та відображення результатів
+ *
+ * @author Sofiia Kyrychok
+ */
+public class Main {
+
+    /**
+     * Об'єкт, реалізуючий інтерфейс {@linkplain View}; обслуговує колекцію
+     * об'єктів {@linkplain Task2.Item2d};
+     *
+     *
+     * Ініціалізуються за допомогою Factory Method
+     */
+    private View view = new ViewableTable().getView();
+    /**
+     * Об'єкт класу {@linkplain Menu}; макрокоманда (Pattern Command)
+     */
+    private Menu menu = new Menu();
+
+    /**
+     * Обробка команд користувача
+     */
+    public void run() {
+        menu.add(new ViewConsoleCommand(view));
+        menu.add(new GenerateConsoleCommand(view));
+        menu.add(new ChangeConsoleCommand(view));
+        menu.add(new SaveConsoleCommand(view));
+        menu.add(new RestoreConsoleCommand(view));
+        menu.add(new UndoConsoleCommand(view));
+        menu.add(new SortConsoleCommand(view));
+        menu.add(new ExecuteConsoleCommand(view));
+        menu.execute();
+    }
+
+    /**
+     * Виконується при запуску команди
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        Main main = new Main();
+        main.run();
+    }
+}
+
+```
+
+```java
+package Task6;
+
+import java.util.concurrent.TimeUnit;
+import Task3.View;
+import Task3.ViewResult;
+import Task5.ConsoleCommand;
+
+
+/**
+ * Консольна команда Execute all threads; Pattern Command
+ *
+ * @author Sofiia Kyrychok
+ */
+public class ExecuteConsoleCommand implements ConsoleCommand {
+
+    /**
+     * Об'єкт, реалізуючий інтерфейс {@linkplain View}; обслуговує колекцію
+     * об'єктів {@linkplain Task2.Item2d};
+     */
+    private View view;
+
+    /**
+     * Повертає поле {@linkplain ExecuteConsoleCommand#view}
+     *
+     * @return значення {@linkplain ExecuteConsoleCommand#view}
+     */
+    public View getView() {
+        return view;
+    }
+
+    /**
+     * Встановлює поле {@linkplain ExecuteConsoleCommand#view}
+     *
+     * @param view значення для {@linkplain ExecuteConsoleCommand#view}
+     * @return нове значение {@linkplain ExecuteConsoleCommand#view}
+     */
+    public View setView(View view) {
+        return this.view = view;
+    }
+
+    /**
+     * Ініціалізує поле {@linkplain ExecuteConsoleCommand#view}
+     *
+     * @param view об'єкт, реалізуючий {@linkplain View}
+     */
+
+public ExecuteConsoleCommand(View view) {
+        this.view = view;
+    }
+
+    @Override
+    public char getKey() {
+        return 'e';
+    }
+
+    @Override
+    public String toString() {
+        return "'e'xecute";
+    }
+
+    @Override
+    public void execute() {
+
+        CommandQueue queue1 = new CommandQueue();
+        CommandQueue queue2 = new CommandQueue();
+        
+        MaxCommand maxCommand = new MaxCommand((ViewResult) view);
+        AvgCommand avgCommand = new AvgCommand((ViewResult) view);
+        MinMaxCommand minMaxCommand = new MinMaxCommand((ViewResult) view);
+        System.out.println("Execute all threads...");
+        
+        queue1.put(minMaxCommand);
+        queue2.put(maxCommand);
+        queue2.put(avgCommand);
+        
+        try {
+            while (avgCommand.running()
+                    || maxCommand.running()
+                    || minMaxCommand.running()) {
+                TimeUnit.MILLISECONDS.sleep(100);
+            }
+            
+            queue1.shutdown();
+            queue2.shutdown();
+
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            System.err.println(e);
+        }
+        System.out.println("All done.");
+    }
+}
+
+```
+
+```java
+package Task6;
+
+import Task5.Command;
+
+/**
+ * Представляє методи для розміщення та вилучення задач обробником потоку;
+ * Pattern Worker Thread
+ *
+ * @author Sofiia Kyrychok
+ */
+public interface Queue {
+
+    /**
+     * Додає нову задачу в чергу; Pattern Worker Thread
+     *
+     * @param cmd нова задача
+     */
+    void put(Command cmd);
+
+    /**
+     * Видаляє задачу з черги; Pattern Worker Thread
+     *
+     * @return видаляєма задача
+     */
+    Command take();
+}
+
+```
+
+```java
+package Task6;
+
+import java.util.Vector;
+import Task5.Command;
+
+/**
+ * Створює обробник потоку, виконуючого об'єкти  інтерфейсом Command;
+ * Pattern Worker Thread
+ *
+ * @author Sofiia Kyrychok
+ */
+public class CommandQueue implements Queue {
+
+    /**
+     * Черга задач
+     */
+    private Vector<Command> tasks;
+    /**
+     * Прапорецт очікування
+     */
+    private boolean waiting;
+    /**
+     * Прапорець завершення
+     */
+    private boolean shutdown;
+
+    /**
+     * Встановлює прапорець завершення
+     */
+    public void shutdown() {
+        shutdown = true;
+    }
+
+    /**
+     * Ініціалізація {@linkplain CommandQueue#tasks}
+     * {@linkplain CommandQueue#waiting}
+     * {@linkplain CommandQueue#waiting}; створює поток для класу
+     * {@linkplain CommandQueue.Worker}
+     */
+    public CommandQueue() {
+        tasks = new Vector<Command>();
+        waiting = false;
+        new Thread(new Worker()).start();
+    }
+
+    @Override
+    public void put(Command r) {
+        tasks.add(r);
+        if (waiting) {
+            synchronized (this) {
+                notifyAll();
+            }
+        }
+    }
+
+    @Override
+    public Command take() {
+        if (tasks.isEmpty()) {
+            synchronized (this) {
+
+                waiting = true;
+                try {
+                    wait();
+                } catch (InterruptedException ie) {
+                    waiting = false;
+                }
+            }
+        }
+        return (Command) tasks.remove(0);
+    }
+
+    /**
+     * Обслуговує чергу задач; Pattern Worker Thread
+     *
+     * @see Runnable
+     */
+    private class Worker implements Runnable {
+
+        /**
+         * Вилучає з черги готові до виконання задачі; Pattern Worker Thread
+         */
+        @Override
+        public void run() {
+            while (!shutdown) {
+                Command r = take();
+                r.execute();
+            }
+        }
+    }
+}
+
+```
+
+```java
+package Task6;
+
+import java.util.concurrent.TimeUnit;
+import Task3.ViewResult;
+import Task5.Command;
+
+/**
+ * Задача, що використовується обробником потоку; Pattern Worker Thread
+ *
+ * @author Sofiia Kyrychok
+ */
+public class MaxCommand implements Command /*, Runnable */ {
+
+    /**
+     * Зберігає результат обробки колекції
+     */
+    private int result = -1;
+    /**
+     * Прапорець готовності результату
+     */
+    private int progress = 0;
+    /**
+     * Обслуговує колекцію об'єктів {@linkplain Task2.Item2d}
+     */
+    private ViewResult viewResult;
+
+    /**
+     * Повертає поле {@linkplain MaxCommand#viewResult}
+     *
+     * @return значення {@linkplain MaxCommand#viewResult}
+     */
+    public ViewResult getViewResult() {
+        return viewResult;
+    }
+
+    /**
+     * Встановлює поле {@linkplain MaxCommand#viewResult}
+     *
+     * @param viewResult значення для {@linkplain MaxCommand#viewResult}
+     * @return нове значення {@linkplain MaxCommand#viewResult}
+     */
+    public ViewResult setViewResult(ViewResult viewResult) {
+        return this.viewResult = viewResult;
+    }
+
+    /**
+     * Ініціалізує поле {@linkplain MaxCommand#viewResult}
+     *
+     * @param viewResult об'єкт класу {@linkplain ViewResult}
+     */
+    public MaxCommand(ViewResult viewResult) {
+        this.viewResult = viewResult;
+    }
+
+    /**
+     * Повертає результат
+     *
+     * @return поле {@linkplain MaxCommand#result}
+     */
+    public int getResult() {
+        return result;
+    }
+
+    /**
+     * Перевіряє готовність результату
+     *
+     * @return false - якщо результат знайдено, інакше - true
+     * @see MaxCommand#result
+     */
+    public boolean running() {
+        return progress < 100;
+    }
+
+    /**
+     * Використовується обробником потоку {@linkplain CommandQueue}; Pattern
+     * Worker Thread
+     */
+    @Override
+    public void execute() {
+        progress = 0;
+        System.out.println("Max executed...");
+        int size = viewResult.getItems().size();
+        result = 0;
+        for (int idx = 1; idx < size; idx++) {
+            if (viewResult.getItems().get(result).getResult()
+                    <= viewResult.getItems().get(idx).getResult()) {
+                result = idx;
+            }
+            progress = idx * 100 / size;
+
+            if (idx % (size / 3) == 0) {
+                System.out.println("Max " + progress + "%");
+            }
+            try {
+                TimeUnit.MILLISECONDS.sleep(3000 / size);
+            } catch (InterruptedException e) {
+                System.err.println(e);
+            }
+        }
+        System.out.println("Max done. Item #" + result + " found: " + viewResult.getItems().get(result));
+
+        progress = 100;
+
+    }
+}
+
+```
+
+```java
+package Task6;
+
+import java.util.concurrent.TimeUnit;
+import Task2.Item2d;
+import Task3.ViewResult;
+import Task5.Command;
+
+/**
+ * Задача, що використовується обробником потоку; Pattern Worker Thread
+ *
+ * @author Sofiia Kyrychok
+ */
+public class MinMaxCommand implements Command /*, Runnable */ {
+
+    /**
+     * Зберігає результат обробки колекції
+     */
+    private int resultMin = -1;
+    /**
+     * Зберігає результат обробки колекції
+     */
+    private int resultMax = -1;
+    /**
+     * Прапорець готовності результату
+     */
+    private int progress = 0;
+    /**
+     * Обслуговує колекцію об'єктів {@linkplain Task2.Item2d}
+     */
+    private ViewResult viewResult;
+
+    /**
+     * Повертає поле {@linkplain MinMaxCommand#viewResult}
+     *
+     * @return значення {@linkplain MinMaxCommand#viewResult}
+     */
+    public ViewResult getViewResult() {
+        return viewResult;
+    }
+
+    /**
+     * Встановлює поле {@linkplain MinMaxCommand#viewResult}
+     *
+     * @param viewResult значення для {@linkplain MinMaxCommand#viewResult}
+     * @return нове значення {@linkplain MinMaxCommand#viewResult}
+     */
+    public ViewResult setViewResult(ViewResult viewResult) {
+        return this.viewResult = viewResult;
+    }
+
+    /**
+     * Ініціалізує поле {@linkplain MinMaxCommand#viewResult}
+     *
+     * @param viewResult об'єкт класу {@linkplain ViewResult}
+     */
+    public MinMaxCommand(ViewResult viewResult) {
+        this.viewResult = viewResult;
+    }
+
+    /**
+     * Повертає результат
+     *
+     * @return поле {@linkplain MinMaxCommand#resultMin}
+     */
+    public int getResultMin() {
+        return resultMin;
+    }
+
+    /**
+     * Повертає результат
+     *
+     * @return поле {@linkplain MinMaxCommand#resultMax}
+     */
+    public int getResultMax() {
+        return resultMax;
+    }
+
+    /**
+     * Перевіряє готовність результату
+     *
+     * @return false - якщо результат знайдено, інакше - true
+     * @see MinMaxCommand#result
+     */
+    public boolean running() {
+        return progress < 100;
+    }
+
+    /**
+     * Використовується обробником потоку {@linkplain CommandQueue}; Pattern
+     * Worker Thread
+     */
+    @Override
+    public void execute() {
+        progress = 0;
+
+        System.out.println("MinMax executed...");
+        int idx = 0, size = viewResult.getItems().size();
+        for (Item2d item : viewResult.getItems()) {
+            if (item.getNum() > 0) {
+                if ((resultMax == -1) || (viewResult.getItems().get(resultMax).getNum() > item.getNum())) {
+                    //resultMax = idx;
+                }
+                if ((resultMin == -1) || (viewResult.getItems().get(resultMin).getNum() > item.getNum())) {
+                    resultMin = idx;
+                }
+            }
+
+            idx++;
+            progress = idx * 100 / size;
+
+            if (idx % (size / 5) == 0) {
+                System.out.println("MinMax " + progress + "%");
+            }
+            try {
+                TimeUnit.MILLISECONDS.sleep(5000 / size);
+            } catch (InterruptedException e) {
+                System.err.println(e);
+            }
+        }
+
+        System.out.print("MinMax done. ");
+
+        if (resultMin > -1) {
+            System.out.print("Min positive #" + resultMin + " found: " + viewResult.getItems().get(resultMin).getNum());
+        } else {
+            System.out.print("Min positive not found.");
+        }
+        if (resultMax > -1) {
+            System.out.println(" Max negative #" + resultMax + " found: " + viewResult.getItems().get(resultMax).getNum());
+        } else {
+            System.out.println(" Max negative item not found.");
+        }
+        progress = 100;
+    }
+}
+
+```
+
+```java
+package Task6;
+
+import Task5.Command;
+import Task3.ViewResult;
+import Task2.Item2d;
+import java.util.concurrent.TimeUnit;
+
+/**
+ * Задача, що використовується обробником потоку; Pattern Worker Thread
+ *
+ * @author Sofiia Kyrychok
+ */
+public class AvgCommand implements Command {
+
+    /**
+     * Зберігає результат обробки колекції
+     */
+    private int result = 0;
+    /**
+     * Прапорець готовності результату
+     */
+    private int progress = 0;
+    /**
+     * Обслуговує колекцію об'єктів {@linkplain Task2.Item2d}
+     */
+    private ViewResult viewResult;
+
+    /**
+     * Повертає поле {@linkplain AvgCommand#viewResult}
+     *
+     * @return значення {@linkplain AvgCommand#viewResult}
+     */
+    public ViewResult getViewResult() {
+        return viewResult;
+    }
+
+    /**
+     * Встановлює поле {@linkplain AvgCommand#viewResult}
+     *
+     * @param viewResult значення для {@linkplain AvgCommand#viewResult}
+     * @return нове значення {@linkplain AvgCommand#viewResult}
+     */
+    public ViewResult setViewResult(ViewResult viewResult) {
+        return this.viewResult = viewResult;
+    }
+
+    /**
+     * Ініціалізує поле {@linkplain AvgCommand#viewResult}
+     *
+     * @param viewResult об'єкт класу {@linkplain ViewResult}
+     */
+    public AvgCommand(ViewResult viewResult) {
+        this.viewResult = viewResult;
+    }
+
+    /**
+     * Повертає результат
+     *
+     * @return поле {@linkplain AvgCommand#result}
+     */
+    public double getResult() {
+        return result;
+    }
+
+    /**
+     * Перевіряє готовність результату
+     *
+     * @return false - якщо результат знайдено, інакше - true
+     * @see AvgCommand#result
+     */
+    public boolean running() {
+        return progress < 100;
+    }
+
+    /**
+     * Використовується обробником потоку {@linkplain CommandQueue}; Pattern
+     * Worker Thread
+     */
+    @Override
+    public void execute() {
+        progress = 0;
+        System.out.println("Average executed...");
+        result = 0;
+        int idx = 1, size = viewResult.getItems().size();
+        for (Item2d item : viewResult.getItems()) {
+            result += item.getResult();
+            progress = idx * 100 / size;
+
+            if (idx++ % (size / 2) == 0) {
+                System.out.println("Average " + progress + "%");
+            }
+            try {
+                TimeUnit.MILLISECONDS.sleep(2000 / size);
+            } catch (InterruptedException e) {
+                System.err.println(e);
+            }
+        }
+        result /= size;
+        System.out.println("Average amount of tetrads done. Result = " + result);
+
+        progress = 100;
+    }
+}
+
+```
+
+```java
+package Tests;
+
+import static org.junit.Assert.*;
+import java.util.concurrent.TimeUnit;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import Task6.*;
+import Task3.ViewResult;
+
+/**
+ * Тестування класів завдання 6
+ *
+ * @author Sofiia Kyrychok
+ */
+public class TestTask6 {
+
+    private final static int N = 1000;
+    private static ViewResult view = new ViewResult(N);
+    private static MaxCommand max1 = new MaxCommand(view);
+    private static MaxCommand max2 = new MaxCommand(view);
+
+    private static AvgCommand avg1 = new AvgCommand(view);
+    private static AvgCommand avg2 = new AvgCommand(view);
+    private static MinMaxCommand min1 = new MinMaxCommand(view);
+    private static MinMaxCommand min2 = new MinMaxCommand(view);
+    private CommandQueue queue = new CommandQueue();
+
+    @BeforeClass
+    public static void setUpBeforeClass() {
+        view.viewInit();
+        assertEquals(N, view.getItems().size());
+    }
+
+    @AfterClass
+    public static void tearDownAfterClass() {
+        assertEquals(max1.getResult(), max2.getResult());
+        assertEquals(avg1.getResult(), avg2.getResult(), .1e-10);
+        assertEquals(min1.getResultMax(), min2.getResultMax());
+        assertEquals(min1.getResultMin(), min2.getResultMin());
+    }
+
+    /**
+     * Перевірка основної функціональності класу {@linkplain MaxCommand}
+     */
+    @Test
+    public void testMax() {
+        max1.execute();
+        assertTrue(max1.getResult() > -1);
+    }
+
+    /**
+     * Перевірка основної функціональності класу {@linkplain AvgCommand}
+     */
+    @Test
+    public void testAvg() {
+        avg1.execute();
+        assertTrue(avg1.getResult() != 0.0);
+    }
+
+    /**
+     * Перевірка основної функціональності класу {@linkplain MinMaxCommand}
+     */
+    @Test
+    public void testMin() {
+        min1.execute();
+        assertTrue(min1.getResultMin() > -1);
+    }
+
+    /**
+     * Перевірка основної функціональності класу {@linkplain CommandQueue} 
+     * задачею {@linkplain MaxCommand}
+     */
+    @Test
+    public void testMaxQueue() {
+        queue.put(max2);
+        try {
+            while (max2.running()) {
+                TimeUnit.MILLISECONDS.sleep(100);
+            }
+            queue.shutdown();
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            fail(e.toString());
+        }
+    }
+
+    /**
+     * Перевірка основної функціональності класу {@linkplain CommandQueue} з
+     * задачею {@linkplain AvgCommand}
+     */
+    @Test
+    public void testAvgQueue() {
+        queue.put(avg2);
+        try {
+            while (avg2.running()) {
+                TimeUnit.MILLISECONDS.sleep(100);
+            }
+            queue.shutdown();
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            fail(e.toString());
+        }
+    }
+
+    /**
+     * Перевірка основної функціональності класу {@linkplain CommandQueue} з
+     * задачею {@linkplain MinMaxCommand}
+     */
+    @Test
+    public void testMinQueue() {
+
+        queue.put(min2);
+        try {
+            while (min2.running()) {
+
+                TimeUnit.MILLISECONDS.sleep(100);
+            }
+            queue.shutdown();
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            fail(e.toString());
+        }
+    }
+}
+```
+
+Результати тестування:
+<img align="center" width="70%" height="70%" src="images/Screenshot7.PNG">
+
+Робота програми:
+<img align="center" width="40%" height="40%" src="images/Screenshot8.PNG">

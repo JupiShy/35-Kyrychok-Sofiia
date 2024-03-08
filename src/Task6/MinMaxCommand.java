@@ -6,58 +6,59 @@ import Task3.ViewResult;
 import Task5.Command;
 
 /**
+ * Задача, що використовується обробником потоку; Pattern Worker Thread
  *
  * @author Sofiia Kyrychok
  */
 public class MinMaxCommand implements Command /*, Runnable */ {
 
     /**
-     * Хранит результат обработки коллекции
+     * Зберігає результат обробки колекції
      */
     private int resultMin = -1;
     /**
-     * Хранит результат обработки коллекции
+     * Зберігає результат обробки колекції
      */
     private int resultMax = -1;
     /**
-     * Флаг готовности результата
+     * Прапорець готовності результату
      */
     private int progress = 0;
     /**
-     * Обслуживает коллекцию объектов {@linkplain ex01.Item2d}
+     * Обслуговує колекцію об'єктів {@linkplain Task2.Item2d}
      */
     private ViewResult viewResult;
 
     /**
-     * Возвращает поле {@linkplain MinMaxCommand#viewResult}
+     * Повертає поле {@linkplain MinMaxCommand#viewResult}
      *
-     * @return значение {@linkplain MinMaxCommand#viewResult}
+     * @return значення {@linkplain MinMaxCommand#viewResult}
      */
     public ViewResult getViewResult() {
         return viewResult;
     }
 
     /**
-     * Устанавливает поле {@linkplain MinMaxCommand#viewResult}
+     * Встановлює поле {@linkplain MinMaxCommand#viewResult}
      *
-     * @param viewResult значение для {@linkplain MinMaxCommand#viewResult}
-     * @return новое значение {@linkplain MinMaxCommand#viewResult}
+     * @param viewResult значення для {@linkplain MinMaxCommand#viewResult}
+     * @return нове значення {@linkplain MinMaxCommand#viewResult}
      */
     public ViewResult setViewResult(ViewResult viewResult) {
         return this.viewResult = viewResult;
     }
 
     /**
-     * Инициализирует поле {@linkplain MinMaxCommand#viewResult}
+     * Ініціалізує поле {@linkplain MinMaxCommand#viewResult}
      *
-     * @param viewResult объект класса {@linkplain ViewResult}
+     * @param viewResult об'єкт класу {@linkplain ViewResult}
      */
     public MinMaxCommand(ViewResult viewResult) {
         this.viewResult = viewResult;
     }
 
     /**
-     * Возвращает результат
+     * Повертає результат
      *
      * @return поле {@linkplain MinMaxCommand#resultMin}
      */
@@ -66,7 +67,7 @@ public class MinMaxCommand implements Command /*, Runnable */ {
     }
 
     /**
-     * Возвращает результат
+     * Повертає результат
      *
      * @return поле {@linkplain MinMaxCommand#resultMax}
      */
@@ -75,17 +76,18 @@ public class MinMaxCommand implements Command /*, Runnable */ {
     }
 
     /**
-     * Проверяет готовность результата
+     * Перевіряє готовність результату
      *
-     * @return false - если результат найден, иначе - true
+     * @return false - якщо результат знайдено, інакше - true
+     * @see MinMaxCommand#result
      */
     public boolean running() {
         return progress < 100;
     }
 
     /**
-     * Используется обработчиком потока {@linkplain CommandQueue}; шаблон Worker
-     * Thread
+     * Використовується обробником потоку {@linkplain CommandQueue}; Pattern
+     * Worker Thread
      */
     @Override
     public void execute() {
@@ -98,24 +100,24 @@ public class MinMaxCommand implements Command /*, Runnable */ {
                 if ((resultMax == -1) || (viewResult.getItems().get(resultMax).getNum() > item.getNum())) {
                     //resultMax = idx;
                 }
-                    if ((resultMin == -1) || (viewResult.getItems().get(resultMin).getNum() > item.getNum())) {
-                        resultMin = idx;
-                    }
-                }
-
-                idx++;
-                progress = idx * 100 / size;
-
-                if (idx % (size / 5) == 0) {
-                    System.out.println("MinMax " + progress + "%");
-                }
-                try {
-                    TimeUnit.MILLISECONDS.sleep(5000 / size);
-                } catch (InterruptedException e) {
-                    System.err.println(e);
+                if ((resultMin == -1) || (viewResult.getItems().get(resultMin).getNum() > item.getNum())) {
+                    resultMin = idx;
                 }
             }
-        
+
+            idx++;
+            progress = idx * 100 / size;
+
+            if (idx % (size / 5) == 0) {
+                System.out.println("MinMax " + progress + "%");
+            }
+            try {
+                TimeUnit.MILLISECONDS.sleep(5000 / size);
+            } catch (InterruptedException e) {
+                System.err.println(e);
+            }
+        }
+
         System.out.print("MinMax done. ");
 
         if (resultMin > -1) {
