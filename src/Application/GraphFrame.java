@@ -26,7 +26,7 @@ public class GraphFrame extends JFrame {
 
         // Create dataset
         XYSeriesCollection dataset = new XYSeriesCollection();
-        numSeries = new XYSeries("Dependence");
+        numSeries = new XYSeries("Ratio");
         dataset.addSeries(numSeries);
 
         // Create chart

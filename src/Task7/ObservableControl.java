@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import Task3.View;
 
-/**
- *
- * @author megas
+/**Управління спостерігачами
+ * Observer Pattern
+ * @author Sofiia Kyrychok
  */
 public class ObservableControl implements Observable {
 
