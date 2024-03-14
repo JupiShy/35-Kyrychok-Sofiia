@@ -1,8 +1,6 @@
 package Task7;
 
-import Task2.Item2d;
 import Task3.View;
-import Task3.ViewResult;
 import Application.GraphFrame;
 
 
@@ -12,14 +10,23 @@ import Application.GraphFrame;
  */
 public class DisplayerObserver implements Observer {
     
+    /**
+     * Вікно, в якому будуть відображатися зміни
+     */
     private GraphFrame frame;
     
+    /**
+     * Передача вікна в клас
+     * @param frame вікно з графіком
+     */
     public DisplayerObserver(GraphFrame frame) {
         this.frame = frame;
     }
     
-    public DisplayerObserver(){}
-    
+    /**
+     * Оновлення графіку оновленими даними
+     * @param view дані для спостерігача
+     */
     @Override
     public void update(View view) {
         System.out.println("Updating...");

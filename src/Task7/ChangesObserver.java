@@ -2,7 +2,7 @@ package Task7;
 
 import Task3.View;
 
-/**
+/**Спостерігач. Повідомляє про зміни в консоль
  * Observer Pattern
  * @author Sofiia Kyrychok
  */

@@ -3,14 +3,13 @@ package Application;
 import Task3.View;
 import Task4.ViewableTable;
 import Task5.ChangeConsoleCommand;
-import Task5.SortConsoleCommand;
-import Task6.ExecuteConsoleCommand;
 import Task7.ObservableControl;
 import Task7.ChangesObserver;
 import Task7.DisplayerObserver;
 import java.io.IOException;
 
 /**
+ * Меню програми (панель управління графіком)
  *
  * @author Sofiia Kyrychok
  */
@@ -31,7 +30,7 @@ public class Menu extends javax.swing.JFrame {
         initComponents();
         this.setTitle("Tetrads counting");
         frame.setVisible(false);
-        
+
         obs.addObserver(chOb);
         obs.addObserver(disOb);
     }
@@ -159,6 +158,11 @@ public class Menu extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Кнопка генерації
+     *
+     * @param evt
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         view.viewInit();
         view.viewShow(); //for console
@@ -167,6 +171,11 @@ public class Menu extends javax.swing.JFrame {
         obs.notifyObservers(view);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    /**
+     * Кнопка здвигу значень
+     *
+     * @param evt
+     */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         ChangeConsoleCommand chCom = new ChangeConsoleCommand(view);
         chCom.execute();
@@ -174,6 +183,11 @@ public class Menu extends javax.swing.JFrame {
         obs.notifyObservers(view);
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    /**
+     * Кнопка збереження
+     *
+     * @param evt
+     */
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
             view.viewSave();
@@ -183,6 +197,11 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    /**
+     * Кнопка відновлення
+     *
+     * @param evt
+     */
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         try {
             view.viewRestore();
@@ -193,6 +212,11 @@ public class Menu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    /**
+     * Кнопка відображення графіку
+     *
+     * @param evt
+     */
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         frame.setVisible(true);
         jLabel3.setText("Graph showed.");

@@ -6,5 +6,9 @@ import Task3.View;
  * @author Sofiia Kyrychok
  */
 public interface Observer {
+    /**
+     * Оновлення даних спостерігачів
+     * @param view об'єкт, зміни в якому спостерігають
+     */
     void update(View view);
 }

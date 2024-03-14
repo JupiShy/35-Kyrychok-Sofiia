@@ -16,6 +16,8 @@
 
 <img align="center" width="40%" height="40%" src="images/Screenshot9.PNG">
 
+Після виконання команди, в полі Notifications з'явиться "звіт" про виконану команду
+
 <img align="center" width="60%" height="60%" src="images/Screenshot10.PNG">
 
 ## Зображення з минулих завдань:
