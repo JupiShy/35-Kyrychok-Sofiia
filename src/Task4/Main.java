@@ -10,7 +10,7 @@ import Task3.View;
  */
 public class Main extends Task3.Main {
 
-    /**Ініціалізує поле {@linkplain ex02.Main#view view}*/
+    /**Ініціалізує поле {@linkplain Task3.Main#view view}*/
     public Main(View view) {
         super(view);
     }

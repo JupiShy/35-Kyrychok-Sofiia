@@ -42,7 +42,6 @@ public class SortConsoleCommand implements ConsoleCommand {
             System.out.println("Writing error: " + e);
         } catch (Exception ex) {
             Logger.getLogger(SortConsoleCommand.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("loshara");
         }
         ArrayList<Item2d> itemsList = ((ViewResult) view).getItems();
         Collections.sort(itemsList, Comparator.comparingDouble(Item2d::getNum));

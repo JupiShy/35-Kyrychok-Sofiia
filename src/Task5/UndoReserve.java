@@ -46,13 +46,11 @@ public class UndoReserve {
         ObjectInputStream is = new ObjectInputStream(new FileInputStream(FNAME1));
         items = (ArrayList<Item2d>) is.readObject();
         is.close();
-        //System.out.println("Prochitav F1 rewrite");
 
         ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(FNAME2));
         os.writeObject(items);
         os.flush();
         os.close();
-        //System.out.println("Zapisav v F2 rewrite");
     }
 
     @SuppressWarnings("unchecked")
@@ -60,7 +58,6 @@ public class UndoReserve {
         try {
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(FNAME2));
             items = (ArrayList<Item2d>) is.readObject();
-            //System.out.println("Prochitav F2 undo");
             is.close();
         } catch (ClassNotFoundException ex) {
         }

@@ -1544,7 +1544,6 @@ public class SortConsoleCommand implements ConsoleCommand {
             System.out.println("Writing error: " + e);
         } catch (Exception ex) {
             Logger.getLogger(SortConsoleCommand.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("loshara");
         }
         ArrayList<Item2d> itemsList = ((ViewResult) view).getItems();
         Collections.sort(itemsList, Comparator.comparingDouble(Item2d::getNum));
@@ -1634,7 +1633,6 @@ public class UndoReserve {
         os.writeObject(items);
         os.flush();
         os.close();
-        //System.out.println("Zapisav F1 write");
     }
 
     @SuppressWarnings("unchecked")
@@ -1644,13 +1642,11 @@ public class UndoReserve {
         ObjectInputStream is = new ObjectInputStream(new FileInputStream(FNAME1));
         items = (ArrayList<Item2d>) is.readObject();
         is.close();
-        //System.out.println("Prochitav F1 rewrite");
 
         ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(FNAME2));
         os.writeObject(items);
         os.flush();
         os.close();
-        //System.out.println("Zapisav v F2 rewrite");
     }
 
     @SuppressWarnings("unchecked")
@@ -1658,7 +1654,6 @@ public class UndoReserve {
         try {
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(FNAME2));
             items = (ArrayList<Item2d>) is.readObject();
-            //System.out.println("Prochitav F2 undo");
             is.close();
         } catch (ClassNotFoundException ex) {
         }

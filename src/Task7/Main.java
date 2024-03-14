@@ -1,0 +1,66 @@
+package Task7;
+
+import Task3.View;
+import Task3.ViewResult;
+import Task4.ViewTable;
+import Task3.ViewableResult;
+import Task5.ChangeConsoleCommand;
+import Task5.GenerateConsoleCommand;
+import Task5.Menu;
+import Task5.RestoreConsoleCommand;
+import Task5.SaveConsoleCommand;
+import Task5.SortConsoleCommand;
+import Task5.UndoConsoleCommand;
+import Task5.ViewConsoleCommand;
+import Task6.ExecuteConsoleCommand;
+
+/**
+ *
+ * @author Sofiia Kyrychok
+ */
+public class Main {
+
+    /**
+     * Об'єкт, реалізуючий інтерфейс {@linkplain View}; обслуговує колекцію
+     * об'єктів {@linkplain Task2.Item2d};
+     *
+     * Ініціалізуються за допомогою Factory Method
+     */
+    private final View view = new ViewableResult().getView();
+    /**
+     * Об'єкт класу {@linkplain Menu}; макрокоманда (Pattern Command)
+     */
+    private final Menu menu = new Menu();
+
+    /**
+     * Запуск меню
+     */
+    public void run() {
+
+        //background();
+        menu.add(new ViewConsoleCommand(view));
+        menu.add(new GenerateConsoleCommand(view));
+        menu.add(new ChangeConsoleCommand(view));
+        menu.add(new SaveConsoleCommand(view));
+        menu.add(new RestoreConsoleCommand(view));
+        menu.add(new UndoConsoleCommand(view));
+        menu.add(new SortConsoleCommand(view));
+        menu.add(new ExecuteConsoleCommand(view));
+        menu.execute();
+    }
+
+//    public void background() {
+//        DisplayerObserver disOb = new DisplayerObserver(view);
+//        disOb.update();
+//    }
+
+    /**
+     * Виконується при запуску команди
+     *
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        Main main = new Main();
+        main.run();
+    }
+}
