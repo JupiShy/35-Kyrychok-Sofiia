@@ -6,6 +6,7 @@
 - [Завдання 5](src/Task5) (07.03.24)
 - [Завдання 6](src/Task6) (08.03.24)
 - [Завдання 7](src/Task7) (до 20.03.24)
+- [Меню та графік](src/Application) 
 
 ## Завдання 7 (Фінальне завдання)
 
@@ -15,7 +16,7 @@
 
 <img align="center" width="40%" height="40%" src="images/Screenshot9.PNG">
 
-<img align="center" width="40%" height="40%" src="images/Screenshot10.PNG">
+<img align="center" width="60%" height="60%" src="images/Screenshot10.PNG">
 
 ## Зображення з минулих завдань:
 
